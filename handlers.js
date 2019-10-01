@@ -16,9 +16,12 @@ const handleNewBookmarkButton = function(){
 };
 
 const handleCancelButton = function(){
-  $('.cancel-button').on('click', function(event){
+  $('.fieldset').on('click',function(event){
+    console.log('i heard that');
     event.preventDefault();
+    console.log('i heard that');
     STORE.adding = false;
+    renderBookmarkList();
   });
 };
 
@@ -70,7 +73,7 @@ const renderNewBookmarkForm = function() {
   if (STORE.adding){
     $('.minimum-rating').html(`
     <form id="form">
-    <fieldset>
+    <fieldset class="fieldset">
       <div>
         <label>Title</label>
         <input type="text" placeholder="tile of bookmark" required>
@@ -121,6 +124,7 @@ console.log('handlers page loaded');
 const callListeners = function(){
   renderBookmarkList(); 
   handleNewBookmarkButton();
+  handleCancelButton();
 };
 
 
