@@ -6,13 +6,14 @@ import STORE from './bookMarks.js';
 
 // function to handle listener for new book mark button
 const handleNewBookmarkButton = function(){
+  //console.log(STORE.bookmarks[0]);
   //console.log('handle new bookmarks button');
   $('.new-bookmark-button').on('click',function(event){
     event.preventDefault();
     $('.js-bookMarks-list').addClass('hidden');
     $('.main-headers').addClass('hidden');
     STORE.adding = true;
-    //console.log(typeof STORE.adding);
+    console.log(typeof STORE.adding);
     renderNewBookmarkForm();
     //console.log(typeof STORE.adding);
     handleCancelButton();
@@ -90,7 +91,7 @@ const renderNewBookmarkForm = function() {
   }
 };
 
-console.log(STORE.bookmarks);
+console.log(typeof STORE.bookmarks);
 
 const renderBookmarkList = function(){
   // console.log(STORE.bookmarks[0].url);
