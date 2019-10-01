@@ -13,10 +13,11 @@ const handleNewBookmarkButton = function(){
     $('.js-bookMarks-list').addClass('hidden');
     $('.main-headers').addClass('hidden');
     STORE.adding = true;
-    console.log(typeof STORE.adding);
+    //console.log(typeof STORE.adding);
     renderNewBookmarkForm();
     //console.log(typeof STORE.adding);
     handleCancelButton();
+    handleSubmitButton();
   });
 };
 
@@ -30,6 +31,16 @@ const handleCancelButton = function(){
     $('.js-bookMarks-list').removeClass('hidden');
     $('.main-headers').removeClass('hidden');
     renderBookmarkList();
+  });
+};
+
+const handleSubmitButton = function(){
+  console.log(STORE.STORE.bookmarks);
+  $('#form').submit(event => {
+    event.preventDefault();
+    let formElement = $('#form')[0];
+    STORE.STORE.bookmarks += serializeJson(formElement);
+    console.log(STORE.STORE.bookmarks);
   });
 };
 
@@ -51,8 +62,8 @@ const handleCancelButton = function(){
 
 
 //render functions
-const generateBookmarkElement = function () {
-  $('.js-bookMarks-list').append(`
+const generateBookmarkElement = function (title, rating) {
+  $('.js-bookMarks-list').html(`
   <div>
         <p>First bookmark |  5 | <span>X</span></p>
   </div>
@@ -68,19 +79,19 @@ const renderNewBookmarkForm = function() {
     <fieldset class="fieldset">
       <div>
         <label>Title</label>
-        <input type="text" placeholder="tile of bookmark" required>
+        <input type="text" name="title" placeholder="tile of bookmark" required>
       </div>
       <div>
         <label>URL</label>
-        <input type="url" placeholder="http://www.abc.com" required>
+        <input type="url" name="url" placeholder="http://www.abc.com" required>
       </div>
       <div>
         <label>Rating</label>
-        <input type="number" min="1" max ="5" required>
+        <input type="number" name="rating" min="1" max ="5" required>
       </div>
       <div>
         <label>Description</label>
-        <textarea type="text"  row="2" name="Description" placeholder="Description of bookmark"></textarea>
+        <textarea type="text"  name="description" row="2" name="Description" placeholder="Description of bookmark"></textarea>
       </div>
       <button type="reset" class="cancel-button" id="cancel-button">Cancel</button>
       <button type="submit" class="submit-button" id="submit-button">Submit</button>
@@ -91,15 +102,18 @@ const renderNewBookmarkForm = function() {
   }
 };
 
-console.log(typeof STORE.bookmarks);
+const serializeJson = function(form){
+  const formData = new FormData(form);
+  const o = {};
+  formData.forEach((val,name) => o[name]= val);
+  return JSON.stringify(o);
+};
 
 const renderBookmarkList = function(){
-  // console.log(STORE.bookmarks[0].url);
-  // let bookmarksList = STORE.bookMarks;
-  // for ( let i=0; i < bookmarksList.bookMarks; i++){
-  //   console.log('running');
-  // }
-
+  let bookmarksList = STORE.STORE.bookmarks;
+  for ( let i=0; i < bookmarksList.length; i++){
+    generateBookmarkElement();
+  }
 };
 
 
