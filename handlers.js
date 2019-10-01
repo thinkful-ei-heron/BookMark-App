@@ -5,11 +5,20 @@ import STORE from './bookMarks.js';
 const handleNewBookmarkButton = function(){
   $('.new-bookmark-button').on('click',function(event){
     event.preventDefault();
+    $('.filter-options').addClass('hidden');
+    $('.js-bookMarks-list').addClass('hidden');
+    $('.new-bookmark-button').addClass('hidden');
     STORE.adding = true;
-    console.log(STORE.adding);
-    render();
+    console.log(typeof STORE.adding);
+    renderNewBookmarkForm();
+    console.log(typeof STORE.adding);
+  });
+};
+
+const handleCancelButton = function(){
+  $('.cancel-button').on('click', function(event){
+    event.preventDefault();
     STORE.adding = false;
-    console.log(STORE.adding);
   });
 };
 
@@ -55,12 +64,12 @@ const generateBookmarkElement = function (item) {
     </li>`;
 };
 
-
-const render = function(){
+// function that renders the list
+// function that renders the add
+const renderNewBookmarkForm = function() {
   if (STORE.adding){
-    
-    $('#js-bookMarks-list').html(`
-    <form>
+    $('.minimum-rating').html(`
+    <form id="form">
     <fieldset>
       <div>
         <label>Title</label>
@@ -82,16 +91,46 @@ const render = function(){
       <button type="submit" class="submit-button" id="submit-button">Submit</button>
   </fieldset>
   </form>
-    `);
+    `
+    );
   }
-
 };
-console.log('handlers page loaded');
-$(handleNewBookmarkButton);
 
+const renderBookmarkList = function(){
+  $('#js-bookMarks-list').html(`
+  <div>
+  <ul>
+    <li>Title</li>
+    <li>Rating</li>
+    <li>Delete</li>
+  </ul>
+</div>
+<div>
+  <p>First bookmark |  5 | <span>X</span></p>
+  <p>Second bookmark |  5 | <span>X</span></p>
+  <p>Third bookmark |  5 | <span>X</span></p>
+  <p>Fourth bookmark |  5 | <span>X</span></p>
+  <p>Fifth bookmark |  5 | <span>X</span></p>
+</div>
+</section>`);
+  
+};
+
+console.log('handlers page loaded');
+
+const callListeners = function(){
+  renderBookmarkList(); 
+  handleNewBookmarkButton();
+};
+
+
+
+$(callListeners);
 
 export default{
   handleNewBookmarkButton,
-  render,
+  handleCancelButton,
+  renderBookmarkList,
+  renderNewBookmarkForm,
   generateBookmarkElement
 };
