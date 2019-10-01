@@ -1,26 +1,33 @@
+// https://github.com/thinkful-ei-heron/BookMark-App.git
+
+
 
 import STORE from './bookMarks.js';
 
 // function to handle listener for new book mark button
 const handleNewBookmarkButton = function(){
+  //console.log('handle new bookmarks button');
   $('.new-bookmark-button').on('click',function(event){
     event.preventDefault();
-    $('.filter-options').addClass('hidden');
     $('.js-bookMarks-list').addClass('hidden');
-    $('.new-bookmark-button').addClass('hidden');
+    $('.main-headers').addClass('hidden');
     STORE.adding = true;
-    console.log(typeof STORE.adding);
+    //console.log(typeof STORE.adding);
     renderNewBookmarkForm();
-    console.log(typeof STORE.adding);
+    //console.log(typeof STORE.adding);
+    handleCancelButton();
   });
 };
 
 const handleCancelButton = function(){
-  $('.fieldset').on('click',function(event){
-    console.log('i heard that');
+// console.log('handle cancel button');
+  $('.cancel-button').on('click', function(event){
     event.preventDefault();
-    console.log('i heard that');
     STORE.adding = false;
+    //console.log(STORE.adding);
+    $('#form').addClass('hidden');
+    $('.js-bookMarks-list').removeClass('hidden');
+    $('.main-headers').removeClass('hidden');
     renderBookmarkList();
   });
 };
@@ -43,35 +50,19 @@ const handleCancelButton = function(){
 
 
 //render functions
-const generateBookmarkElement = function (item) {
-  let itemTitle = `<span class="shopping-item shopping-item__checked">${item.name}</span>`;
-  if (!item.checked) {
-    itemTitle = `
-      <form class="js-edit-item">
-        <input class="shopping-item" type="text" value="${item.name}" />
-      </form>
-    `;
-  }
-
-  return `
-    <li class="js-item-element" data-item-id="${item.id}">
-      ${itemTitle}
-      <div class="shopping-item-controls">
-        <button class="shopping-item-toggle js-item-toggle">
-          <span class="button-label">check</span>
-        </button>
-        <button class="shopping-item-delete js-item-delete">
-          <span class="button-label">delete</span>
-        </button>
-      </div>
-    </li>`;
+const generateBookmarkElement = function () {
+  $('.js-bookMarks-list').append(`
+  <div>
+        <p>First bookmark |  5 | <span>X</span></p>
+  </div>
+  `);
 };
 
 // function that renders the list
 // function that renders the add
 const renderNewBookmarkForm = function() {
   if (STORE.adding){
-    $('.minimum-rating').html(`
+    $('.form').html(`
     <form id="form">
     <fieldset class="fieldset">
       <div>
@@ -99,32 +90,22 @@ const renderNewBookmarkForm = function() {
   }
 };
 
+console.log(STORE.bookmarks);
+
 const renderBookmarkList = function(){
-  $('#js-bookMarks-list').html(`
-  <div>
-  <ul>
-    <li>Title</li>
-    <li>Rating</li>
-    <li>Delete</li>
-  </ul>
-</div>
-<div>
-  <p>First bookmark |  5 | <span>X</span></p>
-  <p>Second bookmark |  5 | <span>X</span></p>
-  <p>Third bookmark |  5 | <span>X</span></p>
-  <p>Fourth bookmark |  5 | <span>X</span></p>
-  <p>Fifth bookmark |  5 | <span>X</span></p>
-</div>
-</section>`);
-  
+  // console.log(STORE.bookmarks[0].url);
+  // let bookmarksList = STORE.bookMarks;
+  // for ( let i=0; i < bookmarksList.bookMarks; i++){
+  //   console.log('running');
+  // }
+
 };
 
-console.log('handlers page loaded');
 
 const callListeners = function(){
+  //console.log('call listeners');
   renderBookmarkList(); 
   handleNewBookmarkButton();
-  handleCancelButton();
 };
 
 
