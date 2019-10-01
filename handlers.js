@@ -5,10 +5,11 @@ import STORE from './bookMarks.js';
 const handleNewBookmarkButton = function(){
   $('.new-bookmark-button').on('click',function(event){
     event.preventDefault();
-    console.log('running');
     STORE.adding = true;
+    console.log(STORE.adding);
     render();
     STORE.adding = false;
+    console.log(STORE.adding);
   });
 };
 
@@ -57,6 +58,7 @@ const generateBookmarkElement = function (item) {
 
 const render = function(){
   if (STORE.adding){
+    
     $('#js-bookMarks-list').html(`
     <form>
     <fieldset>
@@ -88,8 +90,8 @@ console.log('handlers page loaded');
 $(handleNewBookmarkButton);
 
 
-// //export default{
-//   handleNewBookmarkButton,
-//   render,
-//   generateBookmarkElement
-// };
+export default{
+  handleNewBookmarkButton,
+  render,
+  generateBookmarkElement
+};

@@ -1,6 +1,7 @@
 import handlers from './handlers.js';
+
 const main = function(){
-  handlers();
+  handlers.render();
 };
 
 // This the the whole of the shopping-list Index file. You probably don't need much more than this. 
