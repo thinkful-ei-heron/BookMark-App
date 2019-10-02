@@ -44,7 +44,7 @@ const getIdFromElement = function (item) {
 };
 
 const handleDelete = function () {
-  $('.placeholder').on('click','.js-bookmark span', event => {
+  $('.placeholder').on('click',' .delete', event => {
     //console.log('ran');
     event.preventDefault();
     const id = event.currentTarget.id;
@@ -70,16 +70,16 @@ const handleExpand = function(){
     event.preventDefault();
     console.log('i clicked');
     let targetId = bookMarks.findById(event.currentTarget.id);
-    console.log(targetId);
-    $('.main-headers').append(`
+    //console.log(event.currentTarget);
+    $(event.currentTarget).html(`
     <div>
     <p>${targetId.title}</p>
     <p><a href="${targetId.url}">Visit Site</a></p>
     <p>${targetId.desc}</p>
-    <p class="delete"> <span id="${targetId.id}">delete</span></p>
+    <p class="delete" id="${targetId.id}"> <span>delete</span></p>
     </div>
     `);
-    handleDelete()
+    handleDelete();
   });
 };
 handleExpand();
@@ -119,8 +119,8 @@ const generateBookmarkElement = function (title, rating,id) {
   if (title){
     $('.placeholder').append(`
   <div class="js-bookmark" id="${id}">
-        <p>${title} |  ${rating}</p>
-        <p class="delete"> <span id="${id}">delete</span></p>
+        <p class="expand">${title} |  ${rating}</p>
+        <p class="delete" id="${id}"> <span>delete</span></p>
   </div>
   `);
   }
@@ -161,8 +161,8 @@ const render = function() {
       `<section class="main-headers">
       <h3 class="new-bookmark-button"> + New Bookmark </h3>
       <h3 class ="minimum-rating"> Minimum Rating 
-        <select class="filter-options">
-          <option value="1"> 1 </option>
+        <select id="filter-options" value="1">
+          <option value="1" selected="selected"> 1 </option>
           <option value="2"> 2 </option>
           <option value="3"> 3 </option>
           <option value="4"> 4 </option>
@@ -198,14 +198,17 @@ const renderBookmarkList = function(bookmarks){
 };
 
 
-// Possible code for filter.!!!!!!----------------
-// $('.filter-options').on('change', e => {
-//   console.log('heard the change');
-//   const minRating = e.currentTarget.value;
-//   console.log(minRating);
-//   const filteredItems = bookMarks.filter(b => b.rating >= minRating);
-//   renderBookmarkList(filteredItems);
-// });
+//Possible code for filter.!!!!!!----------------
+const handleFilterChange = function(){
+  $('select').change( e => {
+    console.log('heard the change');
+    // const minRating = e.currentTarget.value;
+    // console.log(minRating);
+    // const filteredItems = bookMarks.filter(b => b.rating >= minRating);
+    // renderBookmarkList(filteredItems);
+  });
+};
+handleFilterChange();
 
 
 // const renderFilteredList = function(){
