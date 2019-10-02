@@ -17,6 +17,7 @@ h1{
   display: inline;
   align-items: center;
   padding: 10px;
+  cursor: pointer;
 }
 
 

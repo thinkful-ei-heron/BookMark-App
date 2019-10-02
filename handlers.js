@@ -9,7 +9,7 @@ const handleNewBookmarkButton = function(){
   //console.log('handle new bookmarks button');
   $('.new-bookmark-button').on('click',function(event){
     event.preventDefault();
-    $('.js-bookMarks-list').addClass('hidden');
+    $('.js-bookMarks-list').remove();
     $('.main-headers').addClass('hidden');
     bookMarks.adding = true;
     //console.log(typeof STORE.adding);
@@ -66,10 +66,9 @@ const handleSubmitButton = function(){
         bookMarks.error = true;
         alert(error.message);
       });
-    
-    $('#form').addClass('hidden');
-    $('.js-bookMarks-list').removeClass('hidden');
-    $('.main-headers').removeClass('hidden');
+    $('#form').remove();
+    bookMarks.adding = false;
+    renderBookmarkList();
   });
 };
 
@@ -77,7 +76,7 @@ const handleSubmitButton = function(){
 //render functions
 const generateBookmarkElement = function (title, rating,id) {
   if (title){
-    $('.js-bookMarks-list').append(`
+    $('.main-headers').append(`
   <div id="${id}">
         <p>${title} |  ${rating} | <span>X</span></p>
   </div>
@@ -89,7 +88,7 @@ const generateBookmarkElement = function (title, rating,id) {
 // function that renders the add
 const renderNewBookmarkForm = function() {
   if (bookMarks.adding){
-    $('.form').html(`
+    $('main').html(`
     <form id="form">
     <fieldset class="fieldset">
       <div>
@@ -112,7 +111,20 @@ const renderNewBookmarkForm = function() {
       <button type="submit" class="submit-button" id="submit-button">Submit</button>
   </fieldset>
   </form>
-    `
+    `);
+  } else{
+    $('main').html(
+      `<section class="main-headers">
+      <h3 class="new-bookmark-button"> + New Bookmark </h3>
+      <h3 class ="minimum-rating"> Minimum Rating 
+        <select class="filter-options">
+          <option value="1"> 1 </option>
+          <option value="2"> 2 </option>
+          <option value="3"> 3 </option>
+          <option value="4"> 4 </option>
+          <option value="5"> 5 </option>
+        </select></h3>
+    </section>`
     );
   }
 };
