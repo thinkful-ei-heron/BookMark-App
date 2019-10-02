@@ -33,6 +33,7 @@ const addNewBookmarkAPI = function(id, updateData) {
     'title': updateData.name,
     'url': updateData.checked,
     'rating': updateData.rating,
+    'expanded': false,
     'description': updateData.description
   };
   return apiFetch(

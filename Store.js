@@ -11,15 +11,6 @@ const STORE = {
 };
 
 
-// const apiList = function(){
-//   for( let i=0; i <api.getItems.length; i++){
-//     console.log(api.getItems[i]);
-//     //STORE.api.getItems;
-//   }
-// };
-// apiList();
-
-
 const findById = function (id) {
   return this.items.find(currentItem => currentItem.id === id);
 };
@@ -30,8 +21,9 @@ const addBookmark = function (bookmark) {
 
 
 
+
 export default{
-  STORE,
   findById,
-  addBookmark
+  addBookmark,
+  STORE
 };

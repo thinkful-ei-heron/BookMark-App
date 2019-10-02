@@ -1,6 +1,6 @@
 import handlers from './handlers.js';
 import api from './api.js';
-import store from './bookMarks.js';
+import store from './Store.js';
 
 // This the the whole of the shopping-list Index file. You probably don't need much more than this. 
 const main = function () {
@@ -8,7 +8,7 @@ const main = function () {
   api.getItems()
     .then((bookmarks) => {
       //console.log(bookmarks);
-      handlers.renderBookmarkList;
+      //handlers.renderBookmarkList;
       bookmarks.forEach((bookmark) => store.addBookmark(bookmark));
       handlers.renderBookmarkList(bookmarks); 
     });

@@ -1,6 +1,6 @@
 // https://github.com/thinkful-ei-heron/BookMark-App.git
 
-import STORE from './bookMarks.js';
+import bookMarks from './Store.js';
 import api from './api.js';
 
 // function to handle listener for new book mark button
@@ -11,7 +11,7 @@ const handleNewBookmarkButton = function(){
     event.preventDefault();
     $('.js-bookMarks-list').addClass('hidden');
     $('.main-headers').addClass('hidden');
-    STORE.adding = true;
+    bookMarks.adding = true;
     //console.log(typeof STORE.adding);
     renderNewBookmarkForm();
     //console.log(typeof STORE.adding);
@@ -24,7 +24,7 @@ const handleCancelButton = function(){
 // console.log('handle cancel button');
   $('.cancel-button').on('click', function(event){
     event.preventDefault();
-    STORE.adding = false;
+    bookMarks.adding = false;
     //console.log(STORE.adding);
     $('#form').addClass('hidden');
     $('.js-bookMarks-list').removeClass('hidden');
@@ -56,14 +56,14 @@ const handleSubmitButton = function(){
   $('#form').submit(event => {
     event.preventDefault();
     let formElement = $('#form')[0];
-    STORE.STORE.bookmarks.push(serializeJson(formElement));
+    bookMarks.STORE.bookmarks.push(serializeJson(formElement));
     // console.log(STORE.STORE.bookmarks);
     api.createItem(serializeJson(formElement))
       .then((newItem) => {
-        STORE.addBookmark(newItem);
+        bookMarks.addBookmark(newItem);
       })
       .catch(error => {
-        STORE.error = true;
+        bookMarks.error = true;
         alert(error.message);
       });
     
@@ -88,7 +88,7 @@ const generateBookmarkElement = function (title, rating,id) {
 // function that renders the list
 // function that renders the add
 const renderNewBookmarkForm = function() {
-  if (STORE.adding){
+  if (bookMarks.adding){
     $('.form').html(`
     <form id="form">
     <fieldset class="fieldset">
@@ -125,7 +125,7 @@ const serializeJson = function(form){
 };
 
 const renderBookmarkList = function(){
-  let bookmarksList = STORE.STORE.bookmarks;
+  let bookmarksList = bookMarks.STORE.bookmarks;
   for ( let i=0; i < bookmarksList.length; i++){
     generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating, bookmarksList[i].id);
     //console.log(bookmarksList[i]);
