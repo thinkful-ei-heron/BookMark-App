@@ -34,11 +34,20 @@ const handleCancelButton = function(){
 };
 
 //this needs to find the ID from the element clicked. this will be used for both the expansion and the delete. 
-const getItemIdFromElement = function (item) {
+const getIdFromElement = function (item) {
   return $(item)
     .closest('.js-item-element')
     .data('item-id');
 };
+
+const handleDeleteButton = function(){
+  $('span').on('click', function(item){
+    console.log(item);
+    //getIdFromElement(item);
+  });
+};
+
+
 
 // does this need to place the new value in the local store, or only in the
 // api post call.
@@ -52,7 +61,6 @@ const handleSubmitButton = function(){
     api.createItem(serializeJson(formElement))
       .then((newItem) => {
         STORE.addBookmark(newItem);
-
       })
       .catch(error => {
         STORE.error = true;
@@ -65,28 +73,12 @@ const handleSubmitButton = function(){
   });
 };
 
-// function to listen for filter button
-// adds radio buttons for 1-5 and a filter listener to submit for the filter.
-
-// function to listen for each title to be clicked for expansion
-
-// function to listen for a delete
-
-// function to listen for visiting link when in expanded view
-// Store condition when clicked should adjust the condition inside of the clicked element of bookmark/expanded/true;
-// This should also listen for the click again and invert it to close the expansion.
-
-
-// function when the store is in the condition that adding is set to true.
-// There are 2 new buttons a cancel to abandon adding new bookmark, and create
-// This will gather the information in the form and call the api for an 
-
 
 //render functions
-const generateBookmarkElement = function (title, rating) {
+const generateBookmarkElement = function (title, rating,id) {
   if (title){
     $('.js-bookMarks-list').append(`
-  <div>
+  <div id="${id}">
         <p>${title} |  ${rating} | <span>X</span></p>
   </div>
   `);
@@ -135,7 +127,7 @@ const serializeJson = function(form){
 const renderBookmarkList = function(){
   let bookmarksList = STORE.STORE.bookmarks;
   for ( let i=0; i < bookmarksList.length; i++){
-    generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating);
+    generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating, bookmarksList[i].id);
     //console.log(bookmarksList[i]);
   }
 };
@@ -153,6 +145,8 @@ $(callListeners);
 
 export default{
   handleNewBookmarkButton,
+  getIdFromElement,
+  handleDeleteButton,
   handleCancelButton,
   renderBookmarkList,
   renderNewBookmarkForm,
