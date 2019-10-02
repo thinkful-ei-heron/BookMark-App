@@ -1,8 +1,7 @@
 // https://github.com/thinkful-ei-heron/BookMark-App.git
 
-
-
 import STORE from './bookMarks.js';
+import api from './api.js';
 
 // function to handle listener for new book mark button
 const handleNewBookmarkButton = function(){
@@ -34,13 +33,33 @@ const handleCancelButton = function(){
   });
 };
 
+//this needs to find the ID from the element clicked. this will be used for both the expansion and the delete. 
+const getItemIdFromElement = function (item) {
+  return $(item)
+    .closest('.js-item-element')
+    .data('item-id');
+};
+
+// does this need to place the new value in the local store, or only in the
+// api post call.
 const handleSubmitButton = function(){
-  console.log(STORE.STORE.bookmarks);
+  // console.log(STORE.STORE.bookmarks);
   $('#form').submit(event => {
     event.preventDefault();
     let formElement = $('#form')[0];
-    STORE.STORE.bookmarks += serializeJson(formElement);
-    console.log(STORE.STORE.bookmarks);
+    STORE.STORE.bookmarks.push(serializeJson(formElement));
+    // console.log(STORE.STORE.bookmarks);
+    api.createItem(serializeJson(formElement))
+      .then((newItem) => {
+        STORE.addBookmark(newItem);
+      })
+      .catch(error => {
+        STORE.error = true;
+        alert(error.message);
+      });
+    $('#form').addClass('hidden');
+    $('.js-bookMarks-list').removeClass('hidden');
+    $('.main-headers').removeClass('hidden');
   });
 };
 
@@ -63,11 +82,13 @@ const handleSubmitButton = function(){
 
 //render functions
 const generateBookmarkElement = function (title, rating) {
-  $('.js-bookMarks-list').html(`
+  if (title){
+    $('.js-bookMarks-list').append(`
   <div>
-        <p>First bookmark |  5 | <span>X</span></p>
+        <p>${title} |  ${rating} | <span>X</span></p>
   </div>
   `);
+  }
 };
 
 // function that renders the list
@@ -110,9 +131,10 @@ const serializeJson = function(form){
 };
 
 const renderBookmarkList = function(){
-  let bookmarksList = STORE.STORE.bookmarks;
+  console.log(STORE.STORE.bookmarks);
   for ( let i=0; i < bookmarksList.length; i++){
-    generateBookmarkElement();
+    generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating);
+    console.log(bookmarksList[i]);
   }
 };
 

@@ -1,12 +1,9 @@
+import api from "./api.js";
+
 // This is the store of the bookmarks
 const STORE = {
   bookmarks: [
-    {
-      id:'asd',
-      name:'sdfsdfs',
-      url:'http.....',
-      expanded: false
-    }
+    {}
   ],
   error: null,
   adding: false,
@@ -14,6 +11,27 @@ const STORE = {
 };
 
 
+// const apiList = function(){
+//   for( let i=0; i <api.getItems.length; i++){
+//     console.log(api.getItems[i]);
+//     //STORE.api.getItems;
+//   }
+// };
+// apiList();
+
+
+const findById = function (id) {
+  return this.items.find(currentItem => currentItem.id === id);
+};
+
+const addBookmark = function (bookmark) {
+  STORE.bookmarks.push(bookmark);
+};
+
+
+
 export default{
-  STORE
+  STORE,
+  findById,
+  addBookmark
 };
