@@ -71,14 +71,15 @@ const handleExpand = function(){
     console.log('i clicked');
     let targetId = bookMarks.findById(event.currentTarget.id);
     console.log(targetId);
-    $('.placeholder').remove();
     $('.main-headers').append(`
     <div>
     <p>${targetId.title}</p>
     <p><a href="${targetId.url}">Visit Site</a></p>
     <p>${targetId.desc}</p>
+    <p class="delete"> <span id="${targetId.id}">delete</span></p>
     </div>
     `);
+    handleDelete()
   });
 };
 handleExpand();
