@@ -132,10 +132,11 @@ const serializeJson = function(form){
 
 const renderBookmarkList = function(){
   console.log(STORE.STORE.bookmarks);
-  for ( let i=0; i < bookmarksList.length; i++){
-    generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating);
-    console.log(bookmarksList[i]);
-  }
+  
+  // for ( let i=0; i < bookmarksList.length; i++){
+  //   generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating);
+  //   console.log(bookmarksList[i]);
+  // }
 };
 
 
