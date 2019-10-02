@@ -9,12 +9,12 @@ const handleNewBookmarkButton = function(){
   //console.log('handle new bookmarks button');
   $('.new-bookmark-button').on('click',function(event){
     event.preventDefault();
-    $('.js-bookMarks-list').remove();
+    //$('.js-bookMarks-list').remove();
     //currently this is removing the code because the bookmark list is in main-headers
     $('.main-headers').remove();
     bookMarks.adding = true;
     //console.log(typeof STORE.adding);
-    renderNewBookmarkForm();
+    render();
     //console.log(typeof STORE.adding);
     handleCancelButton();
     handleSubmitButton();
@@ -42,23 +42,21 @@ const getIdFromElement = function (item) {
 };
 
 const handleDelete = function () {
-  // like in `handleItemCheckClicked`, we use event delegation
+
   $('.placeholder').on('click','.js-bookmark', event => {
-    console.log('ran');
+    //console.log('ran');
     event.preventDefault();
-    //get the index of the item in store.items
     const id = event.currentTarget.id;
-    // delete the item
-    //console.log(id);
     bookMarks.findAndDelete(id);
     api.deleteItem(id)
+      .then(renderBookmarkList())
       .catch(error => {
         bookMarks.error = true;
         alert(error.message);
       });
-    renderBookmarkList();
     // render the updated shopping list
   });
+  
 };
 
 
@@ -72,19 +70,21 @@ const handleSubmitButton = function(){
   $('#form').submit(event => {
     event.preventDefault();
     let formElement = $('#form')[0];
-    bookMarks.STORE.bookmarks.push(serializeJson(formElement));
     // console.log(STORE.STORE.bookmarks);
     api.createItem(serializeJson(formElement))
       .then((newItem) => {
         bookMarks.addBookmark(newItem);
+        renderBookmarkList();
+        $('#form').remove();
+        bookMarks.adding = false;
+        render();
       })
       .catch(error => {
         bookMarks.error = true;
         alert(error.message);
       });
-    $('#form').remove();
-    bookMarks.adding = false;
-    renderBookmarkList();
+    
+    
   });
 };
 
@@ -102,8 +102,9 @@ const generateBookmarkElement = function (title, rating,id) {
 
 // function that renders the list
 // function that renders the add
-const renderNewBookmarkForm = function() {
+const render = function() {
   if (bookMarks.adding){
+    console.log('true');
     $('main').html(`
     <form id="form">
     <fieldset class="fieldset">
@@ -129,6 +130,7 @@ const renderNewBookmarkForm = function() {
   </form>
     `);
   } else{
+    console.log('false');
     $('main').html(
       `<section class="main-headers">
       <h3 class="new-bookmark-button"> + New Bookmark </h3>
@@ -140,8 +142,11 @@ const renderNewBookmarkForm = function() {
           <option value="4"> 4 </option>
           <option value="5"> 5 </option>
         </select></h3>
-    </section>`
+    </section>
+    <section class="placeholder"></section>`
     );
+    renderBookmarkList();
+    handleDelete();
   }
 };
 
@@ -153,6 +158,8 @@ const serializeJson = function(form){
 };
 
 const renderBookmarkList = function(){
+  console.log('renderBookmark list is running');
+  $('.placeholder').html('');
   let bookmarksList = bookMarks.STORE.bookmarks;
   for ( let i=0; i < bookmarksList.length; i++){
     generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating, bookmarksList[i].id);
@@ -178,6 +185,6 @@ export default{
   handleDelete,
   handleCancelButton,
   renderBookmarkList,
-  renderNewBookmarkForm,
+  render,
   generateBookmarkElement
 };
