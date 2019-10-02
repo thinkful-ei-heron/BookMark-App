@@ -58,9 +58,9 @@ const deleteItem = function(id){
 
 
 const createItem = function(name){
-  console.log(name);
+  //console.log(name);
   let newItem = JSON.stringify({name});
-  console.log(typeof newItem);
+  //console.log(typeof newItem);
   return apiFetch(`${BASE_URL}bookmarks`,{
     method:'POST',
     headers: { 'Content-Type': 'application/json'},

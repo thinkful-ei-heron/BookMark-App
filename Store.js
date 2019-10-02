@@ -5,7 +5,8 @@ const STORE = {
   bookmarks: [],
   error: null,
   adding: false,
-  filter: 3
+  filterValue: 3,
+  filter: true
 };
 
 

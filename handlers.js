@@ -77,6 +77,7 @@ const handleSubmitButton = function(){
       .then((newItem) => {
         bookMarks.addBookmark(newItem);
         renderBookmarkList();
+        //renderBookmarkList();
         $('#form').remove();
         bookMarks.adding = false;
         render();
@@ -101,12 +102,12 @@ const generateBookmarkElement = function (title, rating,id) {
   `);
   }
 };
-console.log(bookMarks);
+//console.log(bookMarks);
 // function that renders the list
 // function that renders the add
 const render = function() {
   if (bookMarks.adding){
-    console.log('true');
+    //console.log('true');
     $('main').html(`
     <form id="form">
     <fieldset class="fieldset">
@@ -131,8 +132,11 @@ const render = function() {
   </fieldset>
   </form>
     `);
-  } else{
-    console.log('false');
+  } else if (bookMarks.filter){
+    console.log(bookMarks.filter);
+    renderFilteredList();
+  } else {
+    //console.log('false');
     $('main').html(
       `<section class="main-headers">
       <h3 class="new-bookmark-button"> + New Bookmark </h3>
@@ -147,8 +151,8 @@ const render = function() {
     </section>
     <section class="placeholder"></section>`
     );
-    // renderBookmarkList();
-    renderFilteredList();
+    renderBookmarkList();
+    //renderFilteredList();
     handleDelete();
   }
 };
@@ -161,17 +165,16 @@ const serializeJson = function(form){
 };
 
 const renderBookmarkList = function(){
-  console.log('renderBookmark list is running');
+  // console.log('renderBookmark list is running');
   $('.placeholder').html('');
   let bookmarksList = bookMarks.STORE.bookmarks;
   for ( let i=0; i < bookmarksList.length; i++){
     generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating, bookmarksList[i].id);
-    //console.log(bookmarksList[i]);
   }
 };
 
 const renderFilteredList = function(){
-  
+  console.log('this ran');
   let bookmarksList = bookMarks.STORE.bookmarks;
   for ( let i=0; i < bookmarksList.length; i++){
     // for now i'm manually entering the filter rating. Need to get user input for this.
@@ -187,7 +190,8 @@ const renderFilteredList = function(){
 
 const callListeners = function(){
   //console.log('call listeners');
-  renderBookmarkList(); 
+  renderBookmarkList();
+  render(); 
   handleDelete();
   handleNewBookmarkButton();
   renderFilteredList();
