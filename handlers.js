@@ -48,14 +48,16 @@ const handleDelete = function () {
     //console.log('ran');
     event.preventDefault();
     const id = event.currentTarget.id;
+    console.log(id);
     api.deleteItem(id)
-      .then(
-        bookMarks.findAndDelete(id),
-       //renderBookmarkList();
-      ).catch(error => {
+      .then(() => {
+        bookMarks.findAndDelete(id);
+        renderBookmarkList();
+      })
+      .catch(error => {
         bookMarks.error = true;
-        alert(error.message);
-  });
+        console.log(error.message);
+      });
     // render the updated shopping list
   });
 };
@@ -75,7 +77,7 @@ const handleSubmitButton = function(){
     api.createItem(serializeJson(formElement))
       .then((newItem) => {
         bookMarks.addBookmark(newItem);
-       // renderBookmarkList();
+        // renderBookmarkList();
         //renderBookmarkList();
         $('#form').remove();
         bookMarks.adding = false;
@@ -132,10 +134,10 @@ const render = function() {
   </fieldset>
   </form>
     `);
-  }
-  //console.log('false');
-  $('main').html(
-    `<section class="main-headers">
+  } else{
+    //console.log('false');
+    $('main').html(
+      `<section class="main-headers">
       <h3 class="new-bookmark-button"> + New Bookmark </h3>
       <h3 class ="minimum-rating"> Minimum Rating 
         <select class="filter-options">
@@ -147,9 +149,10 @@ const render = function() {
         </select></h3>
     </section>
     <section class="placeholder"></section>`
-  );
+    );
+  }
   renderBookmarkList();
-  handleDelete();
+  //handleDelete();
   
 };
 
@@ -165,7 +168,7 @@ const renderBookmarkList = function(bookmarks){
   //console.log(Store);
   for (let bm of bookMarks.STORE.bookmarks){
     console.log(bookMarks);
-      generateBookmarkElement(
+    generateBookmarkElement(
       bm.title, 
       bm.rating,
       bm.id
