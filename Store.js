@@ -2,12 +2,10 @@ import api from "./api.js";
 
 // This is the store of the bookmarks
 const STORE = {
-  bookmarks: [
-    {}
-  ],
+  bookmarks: [],
   error: null,
   adding: false,
-  filter: 1
+  filter: 3
 };
 
 

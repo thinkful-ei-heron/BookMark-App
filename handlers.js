@@ -18,6 +18,7 @@ const handleNewBookmarkButton = function(){
     //console.log(typeof STORE.adding);
     handleCancelButton();
     handleSubmitButton();
+    handleNewBookmarkButton();
   });
 };
 
@@ -49,7 +50,8 @@ const handleDelete = function () {
     const id = event.currentTarget.id;
     bookMarks.findAndDelete(id);
     api.deleteItem(id)
-      .then(renderBookmarkList())
+      .then(
+        renderBookmarkList())
       .catch(error => {
         bookMarks.error = true;
         alert(error.message);
@@ -99,7 +101,7 @@ const generateBookmarkElement = function (title, rating,id) {
   `);
   }
 };
-
+console.log(bookMarks);
 // function that renders the list
 // function that renders the add
 const render = function() {
@@ -145,7 +147,8 @@ const render = function() {
     </section>
     <section class="placeholder"></section>`
     );
-    renderBookmarkList();
+    // renderBookmarkList();
+    renderFilteredList();
     handleDelete();
   }
 };
@@ -167,12 +170,27 @@ const renderBookmarkList = function(){
   }
 };
 
+const renderFilteredList = function(){
+  
+  let bookmarksList = bookMarks.STORE.bookmarks;
+  for ( let i=0; i < bookmarksList.length; i++){
+    // for now i'm manually entering the filter rating. Need to get user input for this.
+    if(bookmarksList[i].rating >= bookMarks.STORE.filter){
+      generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating, bookmarksList[i].id);
+      console.log('renderFilteredList is running');
+      console.log(bookmarksList[i]);
+    } 
+  }
+};
+
+
 
 const callListeners = function(){
   //console.log('call listeners');
   renderBookmarkList(); 
   handleDelete();
   handleNewBookmarkButton();
+  renderFilteredList();
 };
 
 
