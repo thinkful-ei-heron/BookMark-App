@@ -10,7 +10,7 @@ const main = function () {
       //console.log(bookmarks);
       //handlers.renderBookmarkList;
       bookmarks.forEach((bookmark) => bookMarks.addBookmark(bookmark));
-      console.log(bookMarks); 
+      //console.log(bookMarks); 
       handlers.renderBookmarkList(bookMarks.bookmarks); 
     });
   

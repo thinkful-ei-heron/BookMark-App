@@ -11,7 +11,7 @@ const STORE = {
 
 
 const findById = function (id) {
-  return this.items.find(currentItem => currentItem.id === id);
+  return STORE.bookmarks.find(currentItem => currentItem.id === id);
 };
 
 const addBookmark = function (bookmark) {

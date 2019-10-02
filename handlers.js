@@ -44,7 +44,7 @@ const getIdFromElement = function (item) {
 };
 
 const handleDelete = function () {
-  $('.placeholder').on('click','.js-bookmark', event => {
+  $('.placeholder').on('click','.js-bookmark span', event => {
     //console.log('ran');
     event.preventDefault();
     const id = event.currentTarget.id;
@@ -59,10 +59,29 @@ const handleDelete = function () {
         console.log(error.message);
       });
     // render the updated shopping list
+    
+
   });
 };
+console.log(bookMarks);
 
-
+const handleExpand = function(){
+  $('main').on('click', '.js-bookmark ',  event => {
+    event.preventDefault();
+    console.log('i clicked');
+    let targetId = bookMarks.findById(event.currentTarget.id);
+    console.log(targetId);
+    $('.placeholder').remove();
+    $('.main-headers').append(`
+    <div>
+    <p>${targetId.title}</p>
+    <p><a href="${targetId.url}">Visit Site</a></p>
+    <p>${targetId.desc}</p>
+    </div>
+    `);
+  });
+};
+handleExpand();
 
 // does this need to place the new value in the local store, or only in the
 // api post call.
@@ -95,11 +114,12 @@ const handleSubmitButton = function(){
 
 //render functions
 const generateBookmarkElement = function (title, rating,id) {
-  console.log('ran');
+  //console.log('ran');
   if (title){
     $('.placeholder').append(`
   <div class="js-bookmark" id="${id}">
-        <p>${title} |  ${rating} | <span>X</span></p>
+        <p>${title} |  ${rating}</p>
+        <p class="delete"> <span id="${id}">delete</span></p>
   </div>
   `);
   }
@@ -127,7 +147,7 @@ const render = function() {
       </div>
       <div>
         <label>Description</label>
-        <textarea type="text"  name="description" row="2" name="Description" placeholder="Description of bookmark"></textarea>
+        <input type="text"  name="description"  placeholder="Description of bookmark">
       </div>
       <button type="reset" class="cancel-button" id="cancel-button">Cancel</button>
       <button type="submit" class="submit-button" id="submit-button">Submit</button>
@@ -152,7 +172,7 @@ const render = function() {
     );
   }
   renderBookmarkList();
-  //handleDelete();
+  handleDelete();
   
 };
 
@@ -167,7 +187,7 @@ const renderBookmarkList = function(bookmarks){
   $('.placeholder').html('');  
   //console.log(Store);
   for (let bm of bookMarks.STORE.bookmarks){
-    console.log(bookMarks);
+    //console.log(bookMarks);
     generateBookmarkElement(
       bm.title, 
       bm.rating,
@@ -176,13 +196,15 @@ const renderBookmarkList = function(bookmarks){
   }
 };
 
-$('.filter-options').on('change', e => {
-  console.log('heard the change');
-  const minRating = e.currentTarget.value;
-  console.log(minRating);
-  const filteredItems = bookMarks.filter(b => b.rating >= minRating);
-  renderBookmarkList(filteredItems);
-});
+
+// Possible code for filter.!!!!!!----------------
+// $('.filter-options').on('change', e => {
+//   console.log('heard the change');
+//   const minRating = e.currentTarget.value;
+//   console.log(minRating);
+//   const filteredItems = bookMarks.filter(b => b.rating >= minRating);
+//   renderBookmarkList(filteredItems);
+// });
 
 
 // const renderFilteredList = function(){

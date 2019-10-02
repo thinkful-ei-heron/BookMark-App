@@ -34,7 +34,7 @@ const addNewBookmarkAPI = function(id, updateData) {
     'url': updateData.checked,
     'rating': updateData.rating,
     'expanded': false,
-    'description': updateData.description
+    'desc': updateData.description
   };
   return apiFetch(
     `${BASE_URL}bookmarks/${id}`,{
@@ -58,7 +58,7 @@ const deleteItem = function(id){
 
 
 const createItem = function(name){
-  //console.log(name);
+  console.log(name);
   let newItem = JSON.stringify({name});
   //console.log(typeof newItem);
   return apiFetch(`${BASE_URL}bookmarks`,{
@@ -67,7 +67,6 @@ const createItem = function(name){
     body: name
   });
 };
-
 
 export default {
   apiFetch,
