@@ -19,9 +19,9 @@ const addBookmark = function (bookmark) {
 };
 
 const findAndDelete = function(id){
-  console.log(STORE.bookmarks);
+  // console.log(STORE.bookmarks);
   STORE.bookmarks = STORE.bookmarks.filter(currentItem => currentItem.id !== id);
-  console.log(STORE.bookmarks);
+  console.log('err');
 };
 
 
