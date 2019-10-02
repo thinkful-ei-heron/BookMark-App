@@ -19,11 +19,17 @@ const addBookmark = function (bookmark) {
   STORE.bookmarks.push(bookmark);
 };
 
+const findAndDelete = function(id){
+  console.log(STORE.bookmarks);
+  STORE.bookmarks = STORE.bookmarks.filter(currentItem => currentItem.id !== id);
+  console.log(STORE.bookmarks);
+};
 
 
 
 export default{
   findById,
   addBookmark,
+  findAndDelete,
   STORE
 };

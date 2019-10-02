@@ -10,7 +10,8 @@ const handleNewBookmarkButton = function(){
   $('.new-bookmark-button').on('click',function(event){
     event.preventDefault();
     $('.js-bookMarks-list').remove();
-    $('.main-headers').addClass('hidden');
+    //currently this is removing the code because the bookmark list is in main-headers
+    $('.main-headers').remove();
     bookMarks.adding = true;
     //console.log(typeof STORE.adding);
     renderNewBookmarkForm();
@@ -36,14 +37,27 @@ const handleCancelButton = function(){
 //this needs to find the ID from the element clicked. this will be used for both the expansion and the delete. 
 const getIdFromElement = function (item) {
   return $(item)
-    .closest('.js-item-element')
-    .data('item-id');
+    .closest('.js-bookmark')
+    .data('id');
 };
 
-const handleDeleteButton = function(){
-  $('span').on('click', function(item){
-    console.log(item);
-    //getIdFromElement(item);
+const handleDelete = function () {
+  // like in `handleItemCheckClicked`, we use event delegation
+  $('.placeholder').on('click','.js-bookmark', event => {
+    console.log('ran');
+    event.preventDefault();
+    //get the index of the item in store.items
+    const id = event.currentTarget.id;
+    // delete the item
+    //console.log(id);
+    bookMarks.findAndDelete(id);
+    api.deleteItem(id)
+      .catch(error => {
+        bookMarks.error = true;
+        alert(error.message);
+      });
+    renderBookmarkList();
+    // render the updated shopping list
   });
 };
 
@@ -51,6 +65,8 @@ const handleDeleteButton = function(){
 
 // does this need to place the new value in the local store, or only in the
 // api post call.
+
+
 const handleSubmitButton = function(){
   // console.log(STORE.STORE.bookmarks);
   $('#form').submit(event => {
@@ -76,8 +92,8 @@ const handleSubmitButton = function(){
 //render functions
 const generateBookmarkElement = function (title, rating,id) {
   if (title){
-    $('.main-headers').append(`
-  <div id="${id}">
+    $('.placeholder').append(`
+  <div class="js-bookmark" id="${id}">
         <p>${title} |  ${rating} | <span>X</span></p>
   </div>
   `);
@@ -148,6 +164,7 @@ const renderBookmarkList = function(){
 const callListeners = function(){
   //console.log('call listeners');
   renderBookmarkList(); 
+  handleDelete();
   handleNewBookmarkButton();
 };
 
@@ -158,7 +175,7 @@ $(callListeners);
 export default{
   handleNewBookmarkButton,
   getIdFromElement,
-  handleDeleteButton,
+  handleDelete,
   handleCancelButton,
   renderBookmarkList,
   renderNewBookmarkForm,
