@@ -52,11 +52,13 @@ const handleSubmitButton = function(){
     api.createItem(serializeJson(formElement))
       .then((newItem) => {
         STORE.addBookmark(newItem);
+
       })
       .catch(error => {
         STORE.error = true;
         alert(error.message);
       });
+    
     $('#form').addClass('hidden');
     $('.js-bookMarks-list').removeClass('hidden');
     $('.main-headers').removeClass('hidden');
@@ -131,12 +133,11 @@ const serializeJson = function(form){
 };
 
 const renderBookmarkList = function(){
-  console.log(STORE.STORE.bookmarks);
-  
-  // for ( let i=0; i < bookmarksList.length; i++){
-  //   generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating);
-  //   console.log(bookmarksList[i]);
-  // }
+  let bookmarksList = STORE.STORE.bookmarks;
+  for ( let i=0; i < bookmarksList.length; i++){
+    generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating);
+    //console.log(bookmarksList[i]);
+  }
 };
 
 
