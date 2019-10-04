@@ -1,76 +1,42 @@
 // https://github.com/thinkful-ei-heron/BookMark-App.git
 
-import bookMarks from './Store.js';
+//------- | Import statements | ----------------------------------
+import Store from './Store.js';
 import api from './api.js';
-//import Store from './Store.js';
 
-// function to handle listener for new book mark button
-const handleNewBookmarkButton = function(){
-  //console.log(STORE.bookmarks[0]);
-  //console.log('handle new bookmarks button');
-  $('.new-bookmark-button').on('click',function(event){
+
+//------- | Listener Statements | ----------------------------------
+//Need to review the best practice for the render statement.
+
+let handleNewBookmarkButton = function(){
+  $('.primary-container').on('click','.new-bookmark-button',function(event){
     event.preventDefault();
-    //$('.js-bookMarks-list').remove();
     //currently this is removing the code because the bookmark list is in main-headers
     $('.main-headers').remove();
-    bookMarks.adding = true;
-    //console.log(typeof STORE.adding);
+    Store.adding = true;
     render();
-    //console.log(typeof STORE.adding);
-    handleCancelButton();
-    handleSubmitButton();
-    handleNewBookmarkButton();
+    // handleCancelButton();
+    // handleSubmitButton();
+    // handleNewBookmarkButton();
   });
 };
 
-const handleCancelButton = function(){
-// console.log('handle cancel button');
+let handleCancelButton = function(){
   $('.cancel-button').on('click', function(event){
     event.preventDefault();
-    bookMarks.adding = false;
-    //console.log(STORE.adding);
+    Store.adding = false;
     $('#form').addClass('hidden');
-    $('.js-bookMarks-list').removeClass('hidden');
+    $('.js-Store-list').removeClass('hidden');
     $('.main-headers').removeClass('hidden');
     //renderBookmarkList();
   });
 };
 
-//this needs to find the ID from the element clicked. this will be used for both the expansion and the delete. 
-const getIdFromElement = function (item) {
-  return $(item)
-    .closest('.js-bookmark')
-    .data('id');
-};
-
-const handleDelete = function () {
-  $('.placeholder').on('click',' .delete', event => {
-    //console.log('ran');
-    event.preventDefault();
-    const id = event.currentTarget.id;
-    console.log(id);
-    api.deleteItem(id)
-      .then(() => {
-        bookMarks.findAndDelete(id);
-        renderBookmarkList();
-      })
-      .catch(error => {
-        bookMarks.error = true;
-        console.log(error.message);
-      });
-    // render the updated shopping list
-    
-
-  });
-};
-console.log(bookMarks);
-
-const handleExpand = function(){
+let handleExpand = function(){
   $('main').on('click', '.js-bookmark ',  event => {
     event.preventDefault();
     console.log('i clicked');
-    let targetId = bookMarks.findById(event.currentTarget.id);
-    //console.log(event.currentTarget);
+    let targetId = Store.findById(event.currentTarget.id);
     $(event.currentTarget).html(`
     <div>
     <p>${targetId.title}</p>
@@ -82,40 +48,86 @@ const handleExpand = function(){
     handleDelete();
   });
 };
-handleExpand();
 
-// does this need to place the new value in the local store, or only in the
-// api post call.
-
-
-const handleSubmitButton = function(){
-  // console.log(STORE.STORE.bookmarks);
-  $('#form').submit(event => {
+let handleDelete = function () {
+  $('.placeholder').on('click',' .delete', event => {
     event.preventDefault();
-    let formElement = $('#form')[0];
-    // console.log(STORE.STORE.bookmarks);
-    api.createItem(serializeJson(formElement))
-      .then((newItem) => {
-        bookMarks.addBookmark(newItem);
-        // renderBookmarkList();
-        //renderBookmarkList();
-        $('#form').remove();
-        bookMarks.adding = false;
-        render();
+    let id = event.currentTarget.id;
+    console.log(id);
+    api.deleteItem(id)
+      .then(() => {
+        Store.findAndDelete(id);
+        renderBookmarkList();
       })
       .catch(error => {
-        bookMarks.error = true;
+        Store.error = true;
+        console.log(error.message);
+      });
+    // render the updated shopping list
+    
+
+  });
+};
+
+let handleSubmitButton = function(){
+  $('main').submit(event => {
+    console.log('submit was heard');
+    event.preventDefault();
+    let formElement = $('#form')[0];
+    api.createItem(serializeJson(formElement))
+      .then((newItem) => {
+        Store.addBookmark(newItem);
+        $('#form').remove();
+        Store.adding = false;
+        console.log(Store.LOCALSTORE);
+      })
+      .catch(error => {
+        Store.error = true;
         alert(error.message);
       });
     
     
   });
 };
+//Possible code for filter.!!!!!!----------------
+let handleFilterChange = function(){
+  $('select').change( e => {
+    console.log('heard the change');
+    // let minRating = e.currentTarget.value;
+    // console.log(minRating);
+    // let filteredItems = Store.filter(b => b.rating >= minRating);
+    // renderBookmarkList(filteredItems);
+  });
+};
 
 
-//render functions
-const generateBookmarkElement = function (title, rating,id) {
-  //console.log('ran');
+
+
+
+
+
+
+
+
+
+
+
+
+
+//------- | html / content creation and rendering | ----------------------------------
+
+
+/**
+ * 
+ * @param {element} item 
+ */
+let getIdFromElement = function (element) {
+  return $(element)
+    .closest('.bookmark-title')
+    .data('id');
+};
+
+let generateBookmarkElement = function (title, rating,id) {
   if (title){
     $('.placeholder').append(`
   <div class="js-bookmark" id="${id}">
@@ -125,13 +137,14 @@ const generateBookmarkElement = function (title, rating,id) {
   `);
   }
 };
-//console.log(bookMarks);
-// function that renders the list
-// function that renders the add
-const render = function() {
-  if (bookMarks.adding){
-    //console.log('true');
-    $('main').html(`
+
+
+
+let render = function() {
+  if (Store.adding){
+    //console.log('ran true');
+    $('.primary-container').html(`
+    <section class="primary-container">
     <form id="form">
     <fieldset class="fieldset">
       <div>
@@ -148,16 +161,16 @@ const render = function() {
       </div>
       <div>
         <label>Description</label>
-        <input type="text"  name="description"  placeholder="Description of bookmark">
+        <input type="text"  name="desc"  placeholder="Description of bookmark">
       </div>
       <button type="reset" class="cancel-button" id="cancel-button">Cancel</button>
       <button type="submit" class="submit-button" id="submit-button">Submit</button>
   </fieldset>
   </form>
+  </section>
     `);
   } else{
-    //console.log('false');
-    $('main').html(
+    $('.primary-container').html(
       `<section class="main-headers">
       <h3 class="new-bookmark-button"> + New Bookmark </h3>
       <h3 class ="minimum-rating"> Minimum Rating 
@@ -171,24 +184,21 @@ const render = function() {
     </section>
     <section class="placeholder"></section>`
     );
-  }
+  }  
   renderBookmarkList();
-  handleDelete();
-  
 };
 
-const serializeJson = function(form){
-  const formData = new FormData(form);
-  const o = {};
+let serializeJson = function(form){
+  let formData = new FormData(form);
+  let o = {};
   formData.forEach((val,name) => o[name]= val);
   return JSON.stringify(o);
 };
 
-const renderBookmarkList = function(bookmarks){
+let renderBookmarkList = function(Store){
   $('.placeholder').html('');  
-  //console.log(Store);
-  for (let bm of bookMarks.STORE.bookmarks){
-    //console.log(bookMarks);
+  console.log(Store.LOCALSTORE.bookmarks);
+  for (let bm of Store.LOCALSTORE.bookmarks){
     generateBookmarkElement(
       bm.title, 
       bm.rating,
@@ -198,53 +208,43 @@ const renderBookmarkList = function(bookmarks){
 };
 
 
-//Possible code for filter.!!!!!!----------------
-const handleFilterChange = function(){
-  $('select').change( e => {
-    console.log('heard the change');
-    // const minRating = e.currentTarget.value;
-    // console.log(minRating);
-    // const filteredItems = bookMarks.filter(b => b.rating >= minRating);
-    // renderBookmarkList(filteredItems);
-  });
-};
-handleFilterChange();
 
 
-// const renderFilteredList = function(){
+
+// Needs tweaking for the rendering or checking of the filter of the list. 
+
+// let renderFilteredList = function(){
 //   console.log('this ran');
-//   let bookmarksList = bookMarks.STORE.bookmarks;
-//   for ( let i=0; i < bookmarksList.length; i++){
+//   let StoreList = Store.STORE.Store;
+//   for ( let i=0; i < StoreList.length; i++){
 //     // for now i'm manually entering the filter rating. Need to get user input for this.
-//     if(bookmarksList[i].rating >= bookMarks.STORE.filter){
-//       generateBookmarkElement(bookmarksList[i].title, bookmarksList[i].rating, bookmarksList[i].id);
+//     if(StoreList[i].rating >= Store.STORE.filter){
+//       generateBookmarkElement(StoreList[i].title, StoreList[i].rating, StoreList[i].id);
 //       console.log('renderFilteredList is running');
-//       console.log(bookmarksList[i]);
+//       console.log(StoreList[i]);
 //     } 
 //   }
 // };
 
 
+//------- | binding the listeners | ----------------------------------
 
-const callListeners = function(){
-  //console.log('call listeners');
-  //renderBookmarkList();
-  render(); 
-  handleDelete();
+let callListeners = function(){
+  handleSubmitButton();
   handleNewBookmarkButton();
-  //renderFilteredList();
 };
-
-
-
 $(callListeners);
 
+
+
+//------- | Export Default Object | ----------------------------------
 export default{
   handleNewBookmarkButton,
   getIdFromElement,
   handleDelete,
   handleCancelButton,
   renderBookmarkList,
+  generateBookmarkElement,
+  callListeners,
   render,
-  generateBookmarkElement
 };

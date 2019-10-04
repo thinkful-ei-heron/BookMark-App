@@ -34,7 +34,7 @@ const addNewBookmarkAPI = function(id, updateData) {
     'url': updateData.checked,
     'rating': updateData.rating,
     'expanded': false,
-    'desc': updateData.description
+    'description': updateData.description
   };
   return apiFetch(
     `${BASE_URL}bookmarks/${id}`,{
@@ -56,11 +56,13 @@ const deleteItem = function(id){
 };
 
 
-
+// The name import is a Json string object.
 const createItem = function(name){
-  console.log(name);
-  let newItem = JSON.stringify({name});
-  //console.log(typeof newItem);
+  console.log(apiFetch(`${BASE_URL}bookmarks`,{
+    method:'POST',
+    headers: { 'Content-Type': 'application/json'},
+    body: name
+  }));
   return apiFetch(`${BASE_URL}bookmarks`,{
     method:'POST',
     headers: { 'Content-Type': 'application/json'},

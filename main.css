@@ -1,42 +1,59 @@
+*{
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
 .hidden{
   display:none;
 }
 
 h1{
-  text-align: left;
+  text-align: center;
   padding-left: 15px;
   color:rgb(255, 255, 255);
   border: 2 px solid grey;
+  margin:5px;
   background-color: rgb(58, 147, 177);
 }
 
-.new-bookmark, h3{
+.new-bookmark-button{
   border: 2 px solid black;
   background-color: grey;
   text-align: center;
   display: inline;
   align-items: center;
   padding: 10px;
+  margin:10px;
   cursor: pointer;
+  color: white;
 }
 
+.minimum-rating{
+  border: 2 px solid black;
+  background-color: grey;
+  text-align: center;
+  display: inline;
+  align-items: center;
+  padding: 10px;
+  margin:10px;
+  cursor: pointer;
+  color: white;
+}
+
+.main-headers{
+  display: flex;
+  justify-content: center;
+}
 
 li{
   list-style-type: none;
-  display: inline-flex;
-  padding-left: 10px;
-  padding-right: 10px;
-  text-align: center;
+  display: flexbox;
+  padding: 10px;
   border: 1px solid red;
+  font-size: 15px;
+  align-items: stretch;
+  justify-content: left;
 }
-span{
-  color:red;
+.bookmark-rating{
+ align-self: flex-end;
 }
 
-.item1 {
-  border: 2px solid grey;
-}
-
-div{
-  border:1px solid grey;
-}
