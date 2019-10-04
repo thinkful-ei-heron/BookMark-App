@@ -6,7 +6,8 @@ const main = function () {
   
   //handlers.bindEventListeners();
   handlers.callListeners();
-  handlers.render();
+  handlers.createLocalStore();
+  handlers.renderFormOrHeaders();
 };
 
 

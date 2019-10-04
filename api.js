@@ -28,26 +28,30 @@ const getItems = function(){
   return apiFetch(`${BASE_URL}bookmarks`);
 };
 
-const addNewBookmarkAPI = function(id, updateData) {
-  const newObject = {
-    'title': updateData.name,
-    'url': updateData.checked,
-    'rating': updateData.rating,
-    'expanded': false,
-    'description': updateData.description
-  };
-  return apiFetch(
-    `${BASE_URL}bookmarks/${id}`,{
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newObject)
-    });
-  //    .catch(err => console.log(err.message)));
-};
 
-//
+//I think This was redundant. --------------
+// const addNewBookmarkAPI = function(id, updateData) {
+//   const newObject = {
+//     'title': updateData.name,
+//     'url': updateData.checked,
+//     'rating': updateData.rating,
+//     'expanded': false,
+//     'description': updateData.description
+//   };
+//   return apiFetch(
+//     `${BASE_URL}bookmarks/${id}`,{
+//       method: 'PATCH',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify(newObject)
+//     });
+//   //    .catch(err => console.log(err.message)));
+// };
+
+/**
+ * 
+ * @param {id} id  Takes the ID of an individual and runs DELETE to the server
+ */
 const deleteItem = function(id){
-
   return apiFetch(
     `${BASE_URL}bookmarks/${id}`,{
       method: 'DELETE',
@@ -57,12 +61,7 @@ const deleteItem = function(id){
 
 
 // The name import is a Json string object.
-const createItem = function(name){
-  console.log(apiFetch(`${BASE_URL}bookmarks`,{
-    method:'POST',
-    headers: { 'Content-Type': 'application/json'},
-    body: name
-  }));
+const createItemOnServer = function(name){
   return apiFetch(`${BASE_URL}bookmarks`,{
     method:'POST',
     headers: { 'Content-Type': 'application/json'},
@@ -72,8 +71,8 @@ const createItem = function(name){
 
 export default {
   apiFetch,
-  addNewBookmarkAPI,
+  //addNewBookmarkAPI,
   getItems,
   deleteItem,
-  createItem
+  createItemOnServer
 };

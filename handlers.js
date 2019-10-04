@@ -5,6 +5,23 @@ import Store from './Store.js';
 import api from './api.js';
 
 
+
+//------- | Setup Local Store From Server | ----------------------------------
+let createLocalStore = function(){
+  api.getItems()
+    .then(bookmark => Object.assign(Store.LOCALSTORE.bookmarks,bookmark))
+    .then(() => Store.LOCALSTORE.bookmarks.forEach(bookmark => {
+      bookmark.expanded = false;
+      //console.log(`${bookmark.title} rendered`);
+      generateBookmarkElement(bookmark);}))
+    .catch(error => {
+      Store.errorMessage(error);
+      //render error Message---------------
+    });
+};
+
+
+
 //------- | Listener Statements | ----------------------------------
 //Need to review the best practice for the render statement.
 
@@ -14,7 +31,7 @@ let handleNewBookmarkButton = function(){
     //currently this is removing the code because the bookmark list is in main-headers
     $('.main-headers').remove();
     Store.adding = true;
-    render();
+    renderFormOrHeaders();
     // handleCancelButton();
     // handleSubmitButton();
     // handleNewBookmarkButton();
@@ -42,7 +59,7 @@ let handleExpand = function(){
     <p>${targetId.title}</p>
     <p><a href="${targetId.url}">Visit Site</a></p>
     <p>${targetId.desc}</p>
-    <p class="delete" id="${targetId.id}"> <span>delete</span></p>
+    <p class="delete"> <span id="${targetId.id}">delete</span></p>
     </div>
     `);
     handleDelete();
@@ -50,14 +67,15 @@ let handleExpand = function(){
 };
 
 let handleDelete = function () {
-  $('.placeholder').on('click',' .delete', event => {
+  $('.placeholder').on('click','span', event => {
+    console.log('i heard you click delete');
     event.preventDefault();
     let id = event.currentTarget.id;
     console.log(id);
     api.deleteItem(id)
       .then(() => {
         Store.findAndDelete(id);
-        renderBookmarkList();
+        // renderBookmarkList();
       })
       .catch(error => {
         Store.error = true;
@@ -65,30 +83,29 @@ let handleDelete = function () {
       });
     // render the updated shopping list
     
-
   });
 };
 
 let handleSubmitButton = function(){
-  $('main').submit(event => {
-    console.log('submit was heard');
+  $('main').submit('.submit-button',event => {
     event.preventDefault();
     let formElement = $('#form')[0];
-    api.createItem(serializeJson(formElement))
+    api.createItemOnServer(serializeJson(formElement))
       .then((newItem) => {
         Store.addBookmark(newItem);
-        $('#form').remove();
         Store.adding = false;
-        console.log(Store.LOCALSTORE);
+        renderBookmarkList();
       })
       .catch(error => {
         Store.error = true;
-        alert(error.message);
+        console.log(error.message);
       });
     
     
   });
 };
+
+
 //Possible code for filter.!!!!!!----------------
 let handleFilterChange = function(){
   $('select').change( e => {
@@ -127,20 +144,56 @@ let getIdFromElement = function (element) {
     .data('id');
 };
 
-let generateBookmarkElement = function (title, rating,id) {
-  if (title){
+//Expects a single bookmark element
+let generateBookmarkElement = function (bookmark) {
+  if (bookmark.title && !bookmark.expanded){
     $('.placeholder').append(`
-  <div class="js-bookmark" id="${id}">
-        <p class="expand">${title} |  ${rating}</p>
-        <p class="delete" id="${id}"> <span>delete</span></p>
+  <div class="js-bookmark" id="${bookmark.id}">
+        <p class="expand">${bookmark.title} |  ${bookmark.rating}</p>
+        <p class="delete" id="${bookmark.id}"> <span> - Delete - </span></p>
   </div>
   `);
+  } else if(bookmark.description === null) { 
+    $('.placeholder').append(`
+    <ul>
+    <li class="bookmark-element" id="">
+    <p class="bookmark-title" id="${bookmark.id}">Title of book</p>
+    <a href="${bookmark.url}">Visit Site</a>
+    <p class="bookmark-rating">Rating - ${bookmark.rating}</p>
+    <p>Description: Sorry no description was added.</p>
+    <p><span> - Delete - </span></p>
+    </li>
+  </ul>
+  `);} else{
+    $('.placeholder').append(`
+    <ul>
+    <li class="bookmark-element" id="">
+    <p class="bookmark-title" id="${bookmark.id}">Title of book</p>
+    <a href="${bookmark.url}">Visit Site</a>
+    <p class="bookmark-rating">Rating - ${bookmark.rating}</p>
+    <p>Description:${bookmark.description}</p>
+    <p><span> - Delete - </span></p>
+    </li>
+  </ul>
+  `);}
+};
+
+let renderBookmarkList = function(){
+  $('.primary-container').html('');  
+  let localBookmarks = Store.LOCALSTORE.bookmarks;
+  for (let bm of localBookmarks){
+   // console.log(`renderBookmarkList ran and rendered ${bm.title}`);
+    generateBookmarkElement(
+      bm.title, 
+      bm.rating,
+      bm.id,
+      bm.description,
+      bm.expanded
+    );
   }
 };
 
-
-
-let render = function() {
+let renderFormOrHeaders = function() {
   if (Store.adding){
     //console.log('ran true');
     $('.primary-container').html(`
@@ -185,7 +238,7 @@ let render = function() {
     <section class="placeholder"></section>`
     );
   }  
-  renderBookmarkList();
+  createLocalStore();
 };
 
 let serializeJson = function(form){
@@ -195,17 +248,7 @@ let serializeJson = function(form){
   return JSON.stringify(o);
 };
 
-let renderBookmarkList = function(Store){
-  $('.placeholder').html('');  
-  console.log(Store.LOCALSTORE.bookmarks);
-  for (let bm of Store.LOCALSTORE.bookmarks){
-    generateBookmarkElement(
-      bm.title, 
-      bm.rating,
-      bm.id
-    );
-  }
-};
+
 
 
 
@@ -232,19 +275,20 @@ let renderBookmarkList = function(Store){
 let callListeners = function(){
   handleSubmitButton();
   handleNewBookmarkButton();
+  handleDelete();
 };
-$(callListeners);
 
 
 
 //------- | Export Default Object | ----------------------------------
 export default{
   handleNewBookmarkButton,
+  createLocalStore,
   getIdFromElement,
   handleDelete,
   handleCancelButton,
   renderBookmarkList,
   generateBookmarkElement,
   callListeners,
-  render,
+  renderFormOrHeaders,
 };

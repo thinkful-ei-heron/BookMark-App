@@ -22,8 +22,8 @@ const errorMessage = function (error){
 
 
 export default{
+  LOCALSTORE,
   addBookmark,
   errorMessage,
   findAndDeleteBookmark,
-  LOCALSTORE
 };
