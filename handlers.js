@@ -6,7 +6,12 @@ import api from './api.js';
 
 
 
+
+
+
 //------- | Setup Local Store From Server | ----------------------------------
+// I'm unsure where this would land in the Model, View Controller method.
+// This function takes the content of the API at the load of the page and populates our LOCALSTORE  with it's contents.
 let createLocalStore = function(){
   api.getItems()
     .then(bookmark => Object.assign(Store.LOCALSTORE.bookmarks,bookmark))
@@ -32,7 +37,6 @@ let handleNewBookmarkButton = function(){
     Store.adding = true;
     renderFormOrHeaders();
     renderBookmarkList();
-
   });
 };
 
@@ -74,6 +78,7 @@ let handleDelete = function () {
     api.deleteItem(id)
       .then(() => {
         Store.findAndDeleteBookmark(id);
+        renderFormOrHeaders();
         renderBookmarkList();
       })
       .catch(error => {
@@ -93,6 +98,7 @@ let handleSubmitButton = function(){
       .then((newItem) => {
         Store.addBookmark(newItem);
         Store.adding = false;
+        renderFormOrHeaders();
         renderBookmarkList();
       })
       .catch(error => {
@@ -100,6 +106,7 @@ let handleSubmitButton = function(){
         console.log(error.message);
       });
   });
+
 };
 
 
@@ -161,18 +168,22 @@ let generateBookmarkElement = function (bookmark) {
 };
 
 let renderBookmarkList = function(){
-  $('.primary-container').html('');  
+  $('.placeholder').html('');  
   let localBookmarks = Store.LOCALSTORE.bookmarks;
   for (let bm of localBookmarks){
     generateBookmarkElement(bm);
   }
 };
 
+
+
+
+
+
 let renderFormOrHeaders = function() {
   if (Store.adding){
     //console.log('ran true');
     $('.primary-container').html(`
-    <section class="primary-container">
     <form id="form">
     <fieldset class="fieldset">
       <div>
@@ -195,7 +206,6 @@ let renderFormOrHeaders = function() {
       <button type="submit" class="submit-button" id="submit-button">Submit</button>
   </fieldset>
   </form>
-  </section>
     `);
   } else{
     $('.primary-container').html(
@@ -214,7 +224,7 @@ let renderFormOrHeaders = function() {
     </section>
     <section class="placeholder"></section>`
     );
-  }  
+  }
 };
 
 
