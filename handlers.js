@@ -53,21 +53,20 @@ let handleCancelButton = function(){
 };
 
 let handleExpand = function(){
-  $('main').on('click', '.js-bookmark ',  event => {
+  $('.primary-container').on('click', '.expand ',  event => {
     event.preventDefault();
-    console.log('i clicked');
-    let targetId = Store.findById(event.currentTarget.id);
-    $(event.currentTarget).html(`
-    <div>
-    <p>${targetId.title}</p>
-    <p><a href="${targetId.url}">Visit Site</a></p>
-    <p>${targetId.desc}</p>
-    <p class="delete"> <span id="${targetId.id}">delete</span></p>
-    </div>
-    `);
-    handleDelete();
+    console.log('i clicked expand');
+    let id = event.currentTarget.id;
+    console.log(id);
+    for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
+      if(id === Store.LOCALSTORE.bookmarks[i].id){
+        Store.LOCALSTORE.bookmarks[i].expanded = true;
+      }
+    }
   });
 };
+
+
 
 let handleDelete = function () {
   $('.primary-container').on('click','span', event => {
@@ -85,8 +84,6 @@ let handleDelete = function () {
         Store.error = true;
         console.log(error.message);
       });
-    // render the updated shopping list
-    
   });
 };
 
@@ -151,12 +148,12 @@ let generateBookmarkElement = function (bookmark) {
   if (bookmark.title){
     $('.primary-container').append(`
   <div class="js-bookmark" id="${bookmark.id}">
-        <p class="expand">${bookmark.title} |  ${bookmark.rating}</p>
+        <p class="expand" id="${bookmark.id}">${bookmark.title} |  ${bookmark.rating}</p>
         <p class="delete"> <span id="${bookmark.id}"> - Delete - </span></p>
   </div>
   `);
-  } else {
-    $('.primary-container').append(`
+  } else if(bookmark.adding) {
+    $(`#${bookmark.id}`).html(`
     <li class="bookmark-element"> shouldn't happen
     <p class="bookmark-title">${bookmark.title}</p>
     <a href="${bookmark.url}">Visit Site</a>
@@ -252,6 +249,7 @@ let callListeners = function(){
   handleNewBookmarkButton();
   handleDelete();
   handleFilterChange();
+  handleExpand();
 };
 
 

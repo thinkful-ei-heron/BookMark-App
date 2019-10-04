@@ -29,23 +29,6 @@ const getItems = function(){
 };
 
 
-//I think This was redundant. --------------
-// const addNewBookmarkAPI = function(id, updateData) {
-//   const newObject = {
-//     'title': updateData.name,
-//     'url': updateData.checked,
-//     'rating': updateData.rating,
-//     'expanded': false,
-//     'description': updateData.description
-//   };
-//   return apiFetch(
-//     `${BASE_URL}bookmarks/${id}`,{
-//       method: 'PATCH',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(newObject)
-//     });
-//   //    .catch(err => console.log(err.message)));
-// };
 
 /**
  * 
@@ -71,7 +54,6 @@ const createItemOnServer = function(name){
 
 export default {
   apiFetch,
-  //addNewBookmarkAPI,
   getItems,
   deleteItem,
   createItemOnServer
