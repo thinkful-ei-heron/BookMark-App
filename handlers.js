@@ -24,7 +24,6 @@ let createLocalStore = function(){
 
 //------- | Listener Statements | ----------------------------------
 //Need to review the best practice for the render statement.
-
 let handleNewBookmarkButton = function(){
   $('.primary-container').on('click','.new-bookmark-button',function(event){
     event.preventDefault();
@@ -32,12 +31,12 @@ let handleNewBookmarkButton = function(){
     $('.main-headers').remove();
     Store.adding = true;
     renderFormOrHeaders();
-    // handleCancelButton();
-    // handleSubmitButton();
-    // handleNewBookmarkButton();
+    renderBookmarkList();
+
   });
 };
 
+// change the store and render. That's it. 
 let handleCancelButton = function(){
   $('.cancel-button').on('click', function(event){
     event.preventDefault();
@@ -106,32 +105,15 @@ let handleSubmitButton = function(){
 
 //Possible code for filter.!!!!!!----------------
 let handleFilterChange = function(){
-  $('.js-filter-form').change(( event => {
+  $('.primary-container').change( '.filter-options', ( event => {
+    event.preventDefault(); 
     console.log('heard the change');
-    event.preventDefault();
     // let minRating = e.currentTarget.value;
     // console.log(minRating);
     // let filteredItems = Store.filter(b => b.rating >= minRating);
     // renderBookmarkList(filteredItems);
   }));
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//------- | html / content creation and rendering | ----------------------------------
-
 
 /**
  * 
@@ -143,6 +125,20 @@ let getIdFromElement = function (element) {
     .data('id');
 };
 
+let serializeJson = function(form){
+  let formData = new FormData(form);
+  let o = {};
+  formData.forEach((val,name) => o[name]= val);
+  return JSON.stringify(o);
+};
+
+
+
+
+
+
+
+//------- | html / content creation and rendering | ----------------------------------
 //Expects a single bookmark element
 let generateBookmarkElement = function (bookmark) {
   if (bookmark.title){
@@ -154,7 +150,7 @@ let generateBookmarkElement = function (bookmark) {
   `);
   } else {
     $('.primary-container').append(`
-    <li class="bookmark-element">
+    <li class="bookmark-element"> shouldn't happen
     <p class="bookmark-title">${bookmark.title}</p>
     <a href="${bookmark.url}">Visit Site</a>
     <p class="bookmark-rating">Rating - ${bookmark.rating}</p>
@@ -168,13 +164,7 @@ let renderBookmarkList = function(){
   $('.primary-container').html('');  
   let localBookmarks = Store.LOCALSTORE.bookmarks;
   for (let bm of localBookmarks){
-    generateBookmarkElement(
-      bm.title, 
-      bm.rating,
-      bm.id,
-      bm.description,
-      bm.expanded
-    );
+    generateBookmarkElement(bm);
   }
 };
 
@@ -225,19 +215,7 @@ let renderFormOrHeaders = function() {
     <section class="placeholder"></section>`
     );
   }  
-  createLocalStore();
 };
-
-let serializeJson = function(form){
-  let formData = new FormData(form);
-  let o = {};
-  formData.forEach((val,name) => o[name]= val);
-  return JSON.stringify(o);
-};
-
-
-
-
 
 
 
