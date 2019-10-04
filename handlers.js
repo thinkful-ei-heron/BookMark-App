@@ -67,15 +67,15 @@ let handleExpand = function(){
 };
 
 let handleDelete = function () {
-  $('.placeholder').on('click','span', event => {
+  $('.primary-container').on('click','span', event => {
     console.log('i heard you click delete');
     event.preventDefault();
     let id = event.currentTarget.id;
     console.log(id);
     api.deleteItem(id)
       .then(() => {
-        Store.findAndDelete(id);
-        // renderBookmarkList();
+        Store.findAndDeleteBookmark(id);
+        renderBookmarkList();
       })
       .catch(error => {
         Store.error = true;
@@ -87,7 +87,7 @@ let handleDelete = function () {
 };
 
 let handleSubmitButton = function(){
-  $('main').submit('.submit-button',event => {
+  $('main').submit('#form',event => {
     event.preventDefault();
     let formElement = $('#form')[0];
     api.createItemOnServer(serializeJson(formElement))
@@ -100,21 +100,20 @@ let handleSubmitButton = function(){
         Store.error = true;
         console.log(error.message);
       });
-    
-    
   });
 };
 
 
 //Possible code for filter.!!!!!!----------------
 let handleFilterChange = function(){
-  $('select').change( e => {
+  $('.js-filter-form').change(( event => {
     console.log('heard the change');
+    event.preventDefault();
     // let minRating = e.currentTarget.value;
     // console.log(minRating);
     // let filteredItems = Store.filter(b => b.rating >= minRating);
     // renderBookmarkList(filteredItems);
-  });
+  }));
 };
 
 
@@ -146,35 +145,22 @@ let getIdFromElement = function (element) {
 
 //Expects a single bookmark element
 let generateBookmarkElement = function (bookmark) {
-  if (bookmark.title && !bookmark.expanded){
-    $('.placeholder').append(`
+  if (bookmark.title){
+    $('.primary-container').append(`
   <div class="js-bookmark" id="${bookmark.id}">
         <p class="expand">${bookmark.title} |  ${bookmark.rating}</p>
-        <p class="delete" id="${bookmark.id}"> <span> - Delete - </span></p>
+        <p class="delete"> <span id="${bookmark.id}"> - Delete - </span></p>
   </div>
   `);
-  } else if(bookmark.description === null) { 
-    $('.placeholder').append(`
-    <ul>
-    <li class="bookmark-element" id="">
-    <p class="bookmark-title" id="${bookmark.id}">Title of book</p>
-    <a href="${bookmark.url}">Visit Site</a>
-    <p class="bookmark-rating">Rating - ${bookmark.rating}</p>
-    <p>Description: Sorry no description was added.</p>
-    <p><span> - Delete - </span></p>
-    </li>
-  </ul>
-  `);} else{
-    $('.placeholder').append(`
-    <ul>
-    <li class="bookmark-element" id="">
-    <p class="bookmark-title" id="${bookmark.id}">Title of book</p>
+  } else {
+    $('.primary-container').append(`
+    <li class="bookmark-element">
+    <p class="bookmark-title">${bookmark.title}</p>
     <a href="${bookmark.url}">Visit Site</a>
     <p class="bookmark-rating">Rating - ${bookmark.rating}</p>
     <p>Description:${bookmark.description}</p>
-    <p><span> - Delete - </span></p>
+    <p><span id="${bookmark.id}> - Delete - </span></p>
     </li>
-  </ul>
   `);}
 };
 
@@ -182,7 +168,6 @@ let renderBookmarkList = function(){
   $('.primary-container').html('');  
   let localBookmarks = Store.LOCALSTORE.bookmarks;
   for (let bm of localBookmarks){
-   // console.log(`renderBookmarkList ran and rendered ${bm.title}`);
     generateBookmarkElement(
       bm.title, 
       bm.rating,
@@ -227,13 +212,15 @@ let renderFormOrHeaders = function() {
       `<section class="main-headers">
       <h3 class="new-bookmark-button"> + New Bookmark </h3>
       <h3 class ="minimum-rating"> Minimum Rating 
-        <select id="filter-options" value="1">
+      <form class="js-filter-form">
+        <select class="filter-options" value="1">
           <option value="1" selected="selected"> 1 </option>
           <option value="2"> 2 </option>
           <option value="3"> 3 </option>
           <option value="4"> 4 </option>
           <option value="5"> 5 </option>
         </select></h3>
+        </form>
     </section>
     <section class="placeholder"></section>`
     );
@@ -276,6 +263,7 @@ let callListeners = function(){
   handleSubmitButton();
   handleNewBookmarkButton();
   handleDelete();
+  handleFilterChange();
 };
 
 
