@@ -37,6 +37,8 @@ let handleNewBookmarkButton = function(){
     Store.adding = true;
     renderFormOrHeaders();
     renderBookmarkList();
+    handleSubmitButton();
+    handleCancelButton();
   });
 };
 
@@ -223,10 +225,10 @@ let renderFormOrHeaders = function() {
 //------- | binding the listeners | ----------------------------------
 
 let callListeners = function(){
-  handleSubmitButton();
+  // handleSubmitButton();
   handleNewBookmarkButton();
   handleDelete();
-  handleFilterChange();
+  //handleFilterChange();
   handleExpand();
 };
 
