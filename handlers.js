@@ -33,10 +33,8 @@ let handleNewBookmarkButton = function(){
   $('.primary-container').on('click','.new-bookmark-button',function(event){
     event.preventDefault();
     //currently this is removing the code because the bookmark list is in main-headers
-    $('.main-headers').detach();
     Store.adding = true;
     renderFormOrHeaders();
-    renderBookmarkList();
     handleSubmitButton();
     handleCancelButton();
   });
@@ -72,9 +70,9 @@ let handleExpand = function(){
         //console.log(id + Store.LOCALSTORE.bookmarks[i].expanded);
       } 
     }
-    $('.placeholder').html('');
+    // $('.placeholder').html('');
     renderBookmarkList();
-    handleExpand();
+    // handleExpand();
   });
 };
 
@@ -165,13 +163,13 @@ let serializeJson = function(form){
 const generateExpandedView = function(bookmark){
   console.log();
   $('.placeholder').append(`
-      <li class="bookmark-element js-bookmark">
-        <p class="bookmark-title expand">${bookmark.title}</p>
+      <div class="bookmark-element js-bookmark" >
+        <p class="bookmark-title expand" id="${bookmark.id}">${bookmark.title}</p>
         <a href="${bookmark.url}">Visit Site</a>
         <p class="bookmark-rating">Rating | ${bookmark.rating} | </p>
         <p>Description:${bookmark.desc}</p>
         <p><span id="${bookmark.id}> - Delete - </span></p>
-      </li>
+      </div>
       `);
 };
 
@@ -187,18 +185,24 @@ let generateBookmarkCompressedElement = function (bookmark) {
 };
 
 let renderBookmarkList = function(){
-  $('.placeholder').html('');
-  //console.log('renderbookmarksList is called');  
+  $('.placeholder').html(''); 
   let localBookmarks = Store.LOCALSTORE.bookmarks;
   for (let i = 0; i < localBookmarks.length;  i++){
+
+
     if(localBookmarks[i].rating >= Store.LOCALSTORE.filter) {
       if (localBookmarks[i].expanded){
-        //console.log('expanded');
+
         generateExpandedView(localBookmarks[i]);
+      } else {
+        generateBookmarkCompressedElement(localBookmarks[i]);
       }
-      generateBookmarkCompressedElement(localBookmarks[i]);
-      //console.log('condensed');
+      
+
     }
+
+
+
   }
 
 };
