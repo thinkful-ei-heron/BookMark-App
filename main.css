@@ -57,3 +57,9 @@ li{
  align-self: flex-end;
 }
 
+.bookmark-element{
+  display:block;
+  width: 400px;
+  border:2 px solid grey;
+
+}

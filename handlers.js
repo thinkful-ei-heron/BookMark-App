@@ -17,7 +17,7 @@ let createLocalStore = function(){
     .then(bookmark => Object.assign(Store.LOCALSTORE.bookmarks,bookmark))
     .then(() => Store.LOCALSTORE.bookmarks.forEach(bookmark => {
       bookmark.expanded = false;
-      generateBookmarkElement(bookmark);
+      generateBookmarkCompressedElement(bookmark);
     }))
     .catch(error => {
       Store.errorMessage(error);
@@ -33,7 +33,7 @@ let handleNewBookmarkButton = function(){
   $('.primary-container').on('click','.new-bookmark-button',function(event){
     event.preventDefault();
     //currently this is removing the code because the bookmark list is in main-headers
-    $('.main-headers').remove();
+    $('.main-headers').detach();
     Store.adding = true;
     renderFormOrHeaders();
     renderBookmarkList();
@@ -57,19 +57,29 @@ let handleCancelButton = function(){
 
 // Currently not working. 
 let handleExpand = function(){
-  $('.primary-container').on('click', '.expand ',  event => {
+  $('.primary-container').on('click','.js-bookmark .expand',  event => {
     event.preventDefault();
-    $('.primary-container').html('');
     let id = event.currentTarget.id;
     for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
       if(id === Store.LOCALSTORE.bookmarks[i].id){
+        //console.log(id + Store.LOCALSTORE.bookmarks[i].expanded);
         Store.LOCALSTORE.bookmarks[i].expanded = true;
-      }
+        //console.log(id + Store.LOCALSTORE.bookmarks[i].expanded);
+      } 
+      //showExpanded();
+      renderBookmarkList();
     }
-    renderFormOrHeaders();
-    renderBookmarkList();
   });
 };
+
+const idOfClickedElement = function(){
+  $('.primary-container').on('click','.expand', event => {
+    event.preventDefault();
+    let id = event.currentTarget.id;
+    return id;
+  });
+};
+
 
 
 
@@ -120,15 +130,7 @@ let handleFilterChange = function(){
   }));
 };
 
-/**
- * 
- * @param {element} item 
- */
-let getIdFromElement = function (element) {
-  return $(element)
-    .closest('.bookmark-title')
-    .data('id');
-};
+
 
 let serializeJson = function(form){
   let formData = new FormData(form);
@@ -138,38 +140,51 @@ let serializeJson = function(form){
 };
 
 
+const showExpanded = function(){
+  for(let i=0; i < Store.LOCALSTORE.bookmarks.length; i++){
+    if(Store.LOCALSTORE.bookmarks.expanded){
+      console.log(Store.LOCALSTORE.bookmarks[i]);
+    }
+  }
+};
 
 
+
+
+const generateExpandedView = function(bookmark){
+  $('.bookmark-element').after(`
+      <li class="bookmark-element">
+      <p class="bookmark-title">${bookmark.title}</p>
+      <a href="${bookmark.url}">Visit Site</a>
+      <p class="bookmark-rating">Rating | ${bookmark.rating} | </p>
+      <p>Description:${bookmark.desc}</p>
+      <p><span id="${bookmark.id}> - Delete - </span></p>
+    </li>
+  `);
+};
 
 
 
 //------- | html / content creation and rendering | ----------------------------------
 //Expects a single bookmark element
-let generateBookmarkElement = function (bookmark) {
-  if (bookmark.rating >= Store.LOCALSTORE.filter){
+let generateBookmarkCompressedElement = function (bookmark) {
+  if(bookmark.rating >= Store.LOCALSTORE.filter) {
     $('.placeholder').append(`
-  <div class="js-bookmark" id="${bookmark.id}">
-    <p class="expand" id="${bookmark.id}">${bookmark.title} |  ${bookmark.rating}</p>
-    <p class="delete"> <span id="${bookmark.id}"> - Delete - </span></p>
-  </div>
-  `);
-  } else if(bookmark.expanded) {
-    $('.placeholder').append(`
-    <li class="bookmark-element">
-      <p class="bookmark-title">${bookmark.title}</p>
-      <a href="${bookmark.url}">Visit Site</a>
-      <p class="bookmark-rating">Rating - ${bookmark.rating}</p>
-      <p>Description:${bookmark.desc}</p>
-      <p><span id="${bookmark.id}> - Delete - </span></p>
-    </li>
-  `);}
+    <div class="bookmark-element js-bookmark" id="${bookmark.id}">
+      <p class="expand" id="${bookmark.id}">${bookmark.title} |  ${bookmark.rating}</p>
+      <p class="delete"> <span id="${bookmark.id}"> - Delete - </span></p>
+    </div>
+    `);}
 };
 
 let renderBookmarkList = function(){
   $('.placeholder').html('');  
   let localBookmarks = Store.LOCALSTORE.bookmarks;
-  for (let bm of localBookmarks){
-    generateBookmarkElement(bm);
+  for (let i = 0; i< localBookmarks.length;  i++){
+    if (localBookmarks[i].expanded){
+      generateExpandedView(localBookmarks[i]);
+    }
+    generateBookmarkCompressedElement(localBookmarks[i]);
   }
 };
 
@@ -230,6 +245,7 @@ let callListeners = function(){
   handleDelete();
   handleFilterChange();
   handleExpand();
+  idOfClickedElement();
 };
 
 
@@ -237,12 +253,11 @@ let callListeners = function(){
 //------- | Export Default Object | ----------------------------------
 export default{
   handleNewBookmarkButton,
+  idOfClickedElement,
   createLocalStore,
-  getIdFromElement,
   handleDelete,
   handleCancelButton,
   renderBookmarkList,
-  generateBookmarkElement,
   callListeners,
   renderFormOrHeaders,
 };
