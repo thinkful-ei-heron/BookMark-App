@@ -8,6 +8,7 @@ const main = function () {
   handlers.callListeners();
   handlers.createLocalStore();
   handlers.renderFormOrHeaders();
+  handlers.renderBookmarkList();
 };
 
 

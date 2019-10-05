@@ -13,22 +13,19 @@ import api from './api.js';
 // I'm unsure where this would land in the Model, View Controller method.
 // This function takes the content of the API at the load of the page and populates our LOCALSTORE  with it's contents.
 let createLocalStore = function(){
-  let i=0;
   api.getItems()
     .then(bookmark => Object.assign(Store.LOCALSTORE.bookmarks,bookmark))
     .then(() => Store.LOCALSTORE.bookmarks.forEach(bookmark => {
       bookmark.expanded = false;
-      generateBookmarkCompressedElement(bookmark);
-      console.log(`API loaded this into the Store ${Store.LOCALSTORE.bookmarks[i].title}`);
-      i++;
-    }))
+    })
+      .then(renderBookmarkList()))
     .catch(error => {
       Store.errorMessage(error);
       //render error Message---------------
     });
 };
 
-
+console.log(Store.LOCALSTORE.bookmarks);
 
 //------- | Listener Statements | ----------------------------------
 //Need to review the best practice for the render statement.
@@ -56,8 +53,7 @@ let handleCancelButton = function(){
   });
 };
 
-let clickedObject = '';
-console.log(clickedObject);
+
 // Currently not working. 
 let handleExpand = function(){
   $('.primary-container').on('click','.js-bookmark .expand',  event => {
@@ -65,7 +61,7 @@ let handleExpand = function(){
     //console.log('i heard that click');
     let id = event.currentTarget.id;
     // This is to find the closest bookmark element find closest class, look in jquery
-    clickedObject = $('.expand').closest(`#${id}`);
+    let clickedObject = $('.expand').closest(`#${id}`);
     console.log(clickedObject);
     for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
       if(id === Store.LOCALSTORE.bookmarks[i].id){
@@ -79,13 +75,13 @@ let handleExpand = function(){
   });
 };
 
-const idOfClickedElement = function(){
-  $('.primary-container').on('click','.expand', event => {
-    event.preventDefault();
-    let id = event.currentTarget.id;
-    return id;
-  });
-};
+// const idOfClickedElement = function(){
+//   $('.primary-container').on('click','.expand', event => {
+//     event.preventDefault();
+//     let id = event.currentTarget.id;
+//     return id;
+//   });
+// };
 
 
 
@@ -147,13 +143,13 @@ let serializeJson = function(form){
 };
 
 
-const showExpanded = function(){
-  for(let i=0; i < Store.LOCALSTORE.bookmarks.length; i++){
-    if(Store.LOCALSTORE.bookmarks.expanded){
-      console.log(Store.LOCALSTORE.bookmarks[i]);
-    }
-  }
-};
+// const showExpanded = function(){
+//   for(let i=0; i < Store.LOCALSTORE.bookmarks.length; i++){
+//     if(Store.LOCALSTORE.bookmarks.expanded){
+//       console.log(Store.LOCALSTORE.bookmarks[i]);
+//     }
+//   }
+// };
 
 
 
@@ -163,40 +159,45 @@ const showExpanded = function(){
 //Expects a single bookmark element
 
 
-// const generateExpandedView = function(bookmark){
-//   console.log(clickedObject);
-  
-// };
+const generateExpandedView = function(bookmark){
+  console.log();
+  $('.bookmark-element').html(`
+      <li class="bookmark-element">
+        <p class="bookmark-title">${bookmark.title}</p>
+        <a href="${bookmark.url}">Visit Site</a>
+        <p class="bookmark-rating">Rating | ${bookmark.rating} | </p>
+        <p>Description:${bookmark.desc}</p>
+        <p><span id="${bookmark.id}> - Delete - </span></p>
+      </li>
+      `);
+};
 
 let generateBookmarkCompressedElement = function (bookmark) {
-  if(bookmark.rating >= Store.LOCALSTORE.filter) {
-    $('.placeholder').append(`
+  //console.log(bookmark);
+  $('.placeholder').append(`
     <div class="bookmark-element js-bookmark" id="${bookmark.id}">
       <p class="expand" id="${bookmark.id}">${bookmark.title} |  ${bookmark.rating}</p>
       <p class="delete"> <span id="${bookmark.id}"> - Delete - </span></p>
     </div>
-    `);}
+    `);
+  
 };
 
 let renderBookmarkList = function(){
-  $('.placeholder').html('');  
+  $('.placeholder').html('');
+  console.log('renderbookmarksList is called');  
   let localBookmarks = Store.LOCALSTORE.bookmarks;
-  //console.log(clickedObject);
-
   for (let i = 0; i < localBookmarks.length;  i++){
-    if (localBookmarks[i].expanded){
-      $(clickedObject).html(`
-      <li class="bookmark-element">
-        <p class="bookmark-title">${localBookmarks[i].title}</p>
-        <a href="${localBookmarks[i].url}">Visit Site</a>
-        <p class="bookmark-rating">Rating | ${localBookmarks[i].rating} | </p>
-        <p>Description:${localBookmarks[i].desc}</p>
-        <p><span id="${localBookmarks[i].id}> - Delete - </span></p>
-      </li>
-      `);
+    if(localBookmarks[i].rating >= Store.LOCALSTORE.filter) {
+      if (localBookmarks[i].expanded){
+        console.log('expanded');
+        generateExpandedView(localBookmarks[i]);
+      }
+      generateBookmarkCompressedElement(localBookmarks[i]);
+      console.log('condensed');
     }
-    generateBookmarkCompressedElement(localBookmarks[i]);
   }
+
 };
 
 let renderFormOrHeaders = function() {
@@ -256,7 +257,6 @@ let callListeners = function(){
   handleDelete();
   handleFilterChange();
   handleExpand();
-  idOfClickedElement();
 };
 
 
@@ -264,7 +264,6 @@ let callListeners = function(){
 //------- | Export Default Object | ----------------------------------
 export default{
   handleNewBookmarkButton,
-  idOfClickedElement,
   createLocalStore,
   handleDelete,
   handleCancelButton,
