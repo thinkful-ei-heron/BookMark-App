@@ -18,7 +18,9 @@ let createLocalStore = function(){
     .then(() => Store.LOCALSTORE.bookmarks.forEach(bookmark => {
       bookmark.expanded = false;
     })
-      .then(renderBookmarkList()))
+      .then(() => {
+        renderBookmarkList();
+      }))
     .catch(error => {
       Store.errorMessage(error);
       //render error Message---------------
@@ -58,11 +60,9 @@ let handleCancelButton = function(){
 let handleExpand = function(){
   $('.primary-container').on('click','.js-bookmark .expand',  event => {
     event.preventDefault();
-    //console.log('i heard that click');
     let id = event.currentTarget.id;
     // This is to find the closest bookmark element find closest class, look in jquery
     let clickedObject = $('.expand').closest(`#${id}`);
-    console.log(clickedObject);
     for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
       if(id === Store.LOCALSTORE.bookmarks[i].id){
         Store.LOCALSTORE.bookmarks[i].expanded = true;
@@ -70,7 +70,7 @@ let handleExpand = function(){
       } 
       //showExpanded();
       //renderFormOrHeaders();
-      renderBookmarkList();
+      // renderBookmarkList();
     }
   });
 };
@@ -161,7 +161,7 @@ let serializeJson = function(form){
 
 const generateExpandedView = function(bookmark){
   console.log();
-  $('.bookmark-element').html(`
+  $('.bookmark-element').append(`
       <li class="bookmark-element">
         <p class="bookmark-title">${bookmark.title}</p>
         <a href="${bookmark.url}">Visit Site</a>
