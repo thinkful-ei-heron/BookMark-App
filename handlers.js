@@ -61,8 +61,11 @@ let handleExpand = function(){
   $('.primary-container').on('click','.js-bookmark .expand',  event => {
     event.preventDefault();
     let id = event.currentTarget.id;
+  
     // This is to find the closest bookmark element find closest class, look in jquery
-    let clickedObject = $('.expand').closest(`#${id}`);
+    //let clickedObject = $('.expand').closest(`#${id}`);
+    console.log(`clicked ${event.currentTarget.id}`);
+
     for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
       if(id === Store.LOCALSTORE.bookmarks[i].id){
         Store.LOCALSTORE.bookmarks[i].expanded = true;
