@@ -206,6 +206,7 @@ let renderFormOrHeaders = function() {
       <h3 class ="minimum-rating"> Minimum Rating 
       <form class="js-filter-form">
         <select class="filter-options" value="${Store.LOCALSTORE.filter}">
+          <option value="0">All</option>
           <option value="1"> 1 </option>
           <option value="2"> 2 </option>
           <option value="3"> 3 </option>
@@ -225,7 +226,6 @@ let renderFormOrHeaders = function() {
 //------- | binding the listeners | ----------------------------------
 
 let callListeners = function(){
-  // handleSubmitButton();
   handleNewBookmarkButton();
   handleDelete();
   handleFilterChange();
