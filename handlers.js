@@ -13,11 +13,14 @@ import api from './api.js';
 // I'm unsure where this would land in the Model, View Controller method.
 // This function takes the content of the API at the load of the page and populates our LOCALSTORE  with it's contents.
 let createLocalStore = function(){
+  let i=0;
   api.getItems()
     .then(bookmark => Object.assign(Store.LOCALSTORE.bookmarks,bookmark))
     .then(() => Store.LOCALSTORE.bookmarks.forEach(bookmark => {
       bookmark.expanded = false;
+      i++;
       generateBookmarkCompressedElement(bookmark);
+      console.log(`API loaded this into the Store ${Store.LOCALSTORE.bookmarks[i].title}`);
     }))
     .catch(error => {
       Store.errorMessage(error);
@@ -47,10 +50,9 @@ let handleCancelButton = function(){
   $('.cancel-button').on('click', function(event){
     event.preventDefault();
     Store.adding = false;
-    $('#form').addClass('hidden');
-    $('.js-Store-list').removeClass('hidden');
-    $('.main-headers').removeClass('hidden');
-    //renderBookmarkList();
+    $('#form').remove();
+    renderFormOrHeaders();
+    renderBookmarkList();
   });
 };
 
