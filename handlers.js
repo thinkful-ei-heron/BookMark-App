@@ -18,9 +18,9 @@ let createLocalStore = function(){
     .then(bookmark => Object.assign(Store.LOCALSTORE.bookmarks,bookmark))
     .then(() => Store.LOCALSTORE.bookmarks.forEach(bookmark => {
       bookmark.expanded = false;
-      i++;
       generateBookmarkCompressedElement(bookmark);
       console.log(`API loaded this into the Store ${Store.LOCALSTORE.bookmarks[i].title}`);
+      i++;
     }))
     .catch(error => {
       Store.errorMessage(error);
@@ -56,19 +56,24 @@ let handleCancelButton = function(){
   });
 };
 
-
+let clickedObject = '';
+console.log(clickedObject);
 // Currently not working. 
 let handleExpand = function(){
   $('.primary-container').on('click','.js-bookmark .expand',  event => {
     event.preventDefault();
+    //console.log('i heard that click');
     let id = event.currentTarget.id;
+    // This is to find the closest bookmark element find closest class, look in jquery
+    clickedObject = $('.expand').closest(`#${id}`);
+    console.log(clickedObject);
     for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
       if(id === Store.LOCALSTORE.bookmarks[i].id){
-        //console.log(id + Store.LOCALSTORE.bookmarks[i].expanded);
         Store.LOCALSTORE.bookmarks[i].expanded = true;
         //console.log(id + Store.LOCALSTORE.bookmarks[i].expanded);
       } 
       //showExpanded();
+      //renderFormOrHeaders();
       renderBookmarkList();
     }
   });
@@ -153,22 +158,16 @@ const showExpanded = function(){
 
 
 
-const generateExpandedView = function(bookmark){
-  $('.bookmark-element').after(`
-      <li class="bookmark-element">
-      <p class="bookmark-title">${bookmark.title}</p>
-      <a href="${bookmark.url}">Visit Site</a>
-      <p class="bookmark-rating">Rating | ${bookmark.rating} | </p>
-      <p>Description:${bookmark.desc}</p>
-      <p><span id="${bookmark.id}> - Delete - </span></p>
-    </li>
-  `);
-};
-
-
 
 //------- | html / content creation and rendering | ----------------------------------
 //Expects a single bookmark element
+
+
+// const generateExpandedView = function(bookmark){
+//   console.log(clickedObject);
+  
+// };
+
 let generateBookmarkCompressedElement = function (bookmark) {
   if(bookmark.rating >= Store.LOCALSTORE.filter) {
     $('.placeholder').append(`
@@ -182,9 +181,19 @@ let generateBookmarkCompressedElement = function (bookmark) {
 let renderBookmarkList = function(){
   $('.placeholder').html('');  
   let localBookmarks = Store.LOCALSTORE.bookmarks;
-  for (let i = 0; i< localBookmarks.length;  i++){
+  //console.log(clickedObject);
+
+  for (let i = 0; i < localBookmarks.length;  i++){
     if (localBookmarks[i].expanded){
-      generateExpandedView(localBookmarks[i]);
+      $(clickedObject).html(`
+      <li class="bookmark-element">
+        <p class="bookmark-title">${localBookmarks[i].title}</p>
+        <a href="${localBookmarks[i].url}">Visit Site</a>
+        <p class="bookmark-rating">Rating | ${localBookmarks[i].rating} | </p>
+        <p>Description:${localBookmarks[i].desc}</p>
+        <p><span id="${localBookmarks[i].id}> - Delete - </span></p>
+      </li>
+      `);
     }
     generateBookmarkCompressedElement(localBookmarks[i]);
   }
