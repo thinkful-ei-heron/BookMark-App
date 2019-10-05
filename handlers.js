@@ -228,7 +228,7 @@ let callListeners = function(){
   // handleSubmitButton();
   handleNewBookmarkButton();
   handleDelete();
-  //handleFilterChange();
+  handleFilterChange();
   handleExpand();
 };
 
