@@ -112,7 +112,7 @@ let handleSubmitButton = function(){
 
 //Possible code for filter.!!!!!!----------------
 let handleFilterChange = function(){
-  $('.primary-container').change( '.filter-options', ( event => {
+  $('.primary-container').on('change','.filter-options', ( event => {
     event.preventDefault(); 
     Store.LOCALSTORE.filter = $('.filter-options').val();
     renderFormOrHeaders();
