@@ -67,13 +67,14 @@ let handleExpand = function(){
     for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
       if(id === Store.LOCALSTORE.bookmarks[i].id){
         console.log(Store.LOCALSTORE.bookmarks[i].expanded);
-        Store.LOCALSTORE.bookmarks[i].expanded = true;
+        Store.LOCALSTORE.bookmarks[i].expanded = !Store.LOCALSTORE.bookmarks[i].expanded;
         console.log(Store.LOCALSTORE.bookmarks[i].expanded);
         //console.log(id + Store.LOCALSTORE.bookmarks[i].expanded);
       } 
     }
     $('.placeholder').html('');
     renderBookmarkList();
+    handleExpand();
   });
 };
 
@@ -163,9 +164,9 @@ let serializeJson = function(form){
 
 const generateExpandedView = function(bookmark){
   console.log();
-  $('.bookmark-element').append(`
-      <li class="bookmark-element">
-        <p class="bookmark-title">${bookmark.title}</p>
+  $('.placeholder').append(`
+      <li class="bookmark-element js-bookmark">
+        <p class="bookmark-title expand">${bookmark.title}</p>
         <a href="${bookmark.url}">Visit Site</a>
         <p class="bookmark-rating">Rating | ${bookmark.rating} | </p>
         <p>Description:${bookmark.desc}</p>
