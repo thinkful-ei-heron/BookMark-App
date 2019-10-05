@@ -17,17 +17,15 @@ let createLocalStore = function(){
     .then(bookmark => Object.assign(Store.LOCALSTORE.bookmarks,bookmark))
     .then(() => Store.LOCALSTORE.bookmarks.forEach(bookmark => {
       bookmark.expanded = false;
-    })
-      .then(() => {
-        renderBookmarkList();
-      }))
+      renderBookmarkList();
+    }))
     .catch(error => {
       Store.errorMessage(error);
       //render error Message---------------
     });
 };
 
-console.log(Store.LOCALSTORE.bookmarks);
+//console.log(Store.LOCALSTORE.bookmarks);
 
 //------- | Listener Statements | ----------------------------------
 //Need to review the best practice for the render statement.
@@ -68,13 +66,14 @@ let handleExpand = function(){
 
     for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
       if(id === Store.LOCALSTORE.bookmarks[i].id){
+        console.log(Store.LOCALSTORE.bookmarks[i].expanded);
         Store.LOCALSTORE.bookmarks[i].expanded = true;
+        console.log(Store.LOCALSTORE.bookmarks[i].expanded);
         //console.log(id + Store.LOCALSTORE.bookmarks[i].expanded);
       } 
-      //showExpanded();
-      //renderFormOrHeaders();
-      // renderBookmarkList();
     }
+    $('.placeholder').html('');
+    renderBookmarkList();
   });
 };
 
@@ -188,16 +187,16 @@ let generateBookmarkCompressedElement = function (bookmark) {
 
 let renderBookmarkList = function(){
   $('.placeholder').html('');
-  console.log('renderbookmarksList is called');  
+  //console.log('renderbookmarksList is called');  
   let localBookmarks = Store.LOCALSTORE.bookmarks;
   for (let i = 0; i < localBookmarks.length;  i++){
     if(localBookmarks[i].rating >= Store.LOCALSTORE.filter) {
       if (localBookmarks[i].expanded){
-        console.log('expanded');
+        //console.log('expanded');
         generateExpandedView(localBookmarks[i]);
       }
       generateBookmarkCompressedElement(localBookmarks[i]);
-      console.log('condensed');
+      //console.log('condensed');
     }
   }
 
