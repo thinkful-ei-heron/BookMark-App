@@ -17,8 +17,8 @@ let createLocalStore = function(){
     .then(bookmark => Object.assign(Store.LOCALSTORE.bookmarks,bookmark))
     .then(() => Store.LOCALSTORE.bookmarks.forEach(bookmark => {
       bookmark.expanded = false;
-      //console.log(`${bookmark.title} rendered`);
-      generateBookmarkElement(bookmark);}))
+      generateBookmarkElement(bookmark);
+    }))
     .catch(error => {
       Store.errorMessage(error);
       //render error Message---------------
@@ -52,17 +52,20 @@ let handleCancelButton = function(){
   });
 };
 
+
+// Currently not working. 
 let handleExpand = function(){
   $('.primary-container').on('click', '.expand ',  event => {
     event.preventDefault();
-    console.log('i clicked expand');
+    $('.primary-container').html('');
     let id = event.currentTarget.id;
-    console.log(id);
     for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
       if(id === Store.LOCALSTORE.bookmarks[i].id){
         Store.LOCALSTORE.bookmarks[i].expanded = true;
       }
     }
+    renderFormOrHeaders();
+    renderBookmarkList();
   });
 };
 
@@ -70,10 +73,8 @@ let handleExpand = function(){
 
 let handleDelete = function () {
   $('.primary-container').on('click','span', event => {
-    console.log('i heard you click delete');
     event.preventDefault();
     let id = event.currentTarget.id;
-    console.log(id);
     api.deleteItem(id)
       .then(() => {
         Store.findAndDeleteBookmark(id);
@@ -111,11 +112,9 @@ let handleSubmitButton = function(){
 let handleFilterChange = function(){
   $('.primary-container').change( '.filter-options', ( event => {
     event.preventDefault(); 
-    console.log('heard the change');
-    // let minRating = e.currentTarget.value;
-    // console.log(minRating);
-    // let filteredItems = Store.filter(b => b.rating >= minRating);
-    // renderBookmarkList(filteredItems);
+    Store.LOCALSTORE.filter = $('.filter-options').val();
+    renderFormOrHeaders();
+    renderBookmarkList();
   }));
 };
 
@@ -145,21 +144,21 @@ let serializeJson = function(form){
 //------- | html / content creation and rendering | ----------------------------------
 //Expects a single bookmark element
 let generateBookmarkElement = function (bookmark) {
-  if (bookmark.title){
-    $('.primary-container').append(`
+  if (bookmark.rating >= Store.LOCALSTORE.filter){
+    $('.placeholder').append(`
   <div class="js-bookmark" id="${bookmark.id}">
-        <p class="expand" id="${bookmark.id}">${bookmark.title} |  ${bookmark.rating}</p>
-        <p class="delete"> <span id="${bookmark.id}"> - Delete - </span></p>
+    <p class="expand" id="${bookmark.id}">${bookmark.title} |  ${bookmark.rating}</p>
+    <p class="delete"> <span id="${bookmark.id}"> - Delete - </span></p>
   </div>
   `);
-  } else if(bookmark.adding) {
-    $(`#${bookmark.id}`).html(`
-    <li class="bookmark-element"> shouldn't happen
-    <p class="bookmark-title">${bookmark.title}</p>
-    <a href="${bookmark.url}">Visit Site</a>
-    <p class="bookmark-rating">Rating - ${bookmark.rating}</p>
-    <p>Description:${bookmark.description}</p>
-    <p><span id="${bookmark.id}> - Delete - </span></p>
+  } else if(bookmark.expanded) {
+    $('.placeholder').append(`
+    <li class="bookmark-element">
+      <p class="bookmark-title">${bookmark.title}</p>
+      <a href="${bookmark.url}">Visit Site</a>
+      <p class="bookmark-rating">Rating - ${bookmark.rating}</p>
+      <p>Description:${bookmark.desc}</p>
+      <p><span id="${bookmark.id}> - Delete - </span></p>
     </li>
   `);}
 };
@@ -172,14 +171,8 @@ let renderBookmarkList = function(){
   }
 };
 
-
-
-
-
-
 let renderFormOrHeaders = function() {
   if (Store.adding){
-    //console.log('ran true');
     $('.primary-container').html(`
     <form id="form">
     <fieldset class="fieldset">
@@ -205,13 +198,13 @@ let renderFormOrHeaders = function() {
   </form>
     `);
   } else{
-    $('.primary-container').html(
-      `<section class="main-headers">
+    $('.primary-container').html(`
+      <section class="main-headers">
       <h3 class="new-bookmark-button"> + New Bookmark </h3>
       <h3 class ="minimum-rating"> Minimum Rating 
       <form class="js-filter-form">
-        <select class="filter-options" value="1">
-          <option value="1" selected="selected"> 1 </option>
+        <select class="filter-options" value="${Store.LOCALSTORE.filter}">
+          <option value="1"> 1 </option>
           <option value="2"> 2 </option>
           <option value="3"> 3 </option>
           <option value="4"> 4 </option>
@@ -225,21 +218,6 @@ let renderFormOrHeaders = function() {
 };
 
 
-
-// Needs tweaking for the rendering or checking of the filter of the list. 
-
-// let renderFilteredList = function(){
-//   console.log('this ran');
-//   let StoreList = Store.STORE.Store;
-//   for ( let i=0; i < StoreList.length; i++){
-//     // for now i'm manually entering the filter rating. Need to get user input for this.
-//     if(StoreList[i].rating >= Store.STORE.filter){
-//       generateBookmarkElement(StoreList[i].title, StoreList[i].rating, StoreList[i].id);
-//       console.log('renderFilteredList is running');
-//       console.log(StoreList[i]);
-//     } 
-//   }
-// };
 
 
 //------- | binding the listeners | ----------------------------------
