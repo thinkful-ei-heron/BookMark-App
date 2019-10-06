@@ -33,7 +33,6 @@ h1{
   text-align: center;
   padding-bottom: 5px;
   color:#F9BD67;
-  border: 2 px solid grey;
   width: 100%;
 }
 
@@ -79,7 +78,7 @@ h1{
   align-content: center;
   width: 300px;
   cursor: pointer;
-  border: 3px solid white;
+  border: 3px solid#bd9e6f;
   margin-left: 5%;
   padding-left: 10px;
   margin-bottom: 5px;
@@ -91,11 +90,17 @@ h1{
 
 .expanded{
   color: #F9BD67;
+  cursor: pointer;
   height: auto !important;
   width: 400px;
   margin-left: 5%;
+  margin-bottom: 5px;
   padding: 5px;
-  border: 3px solid white;
+  border: 3px solid #F9BD67;
   border-radius: 25px;
   height: 100px;
+}
+
+.delete{
+  color: #768477;
 }
