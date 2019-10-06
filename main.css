@@ -104,3 +104,20 @@ h1{
 .delete{
   color: #768477;
 }
+
+
+
+fieldset{
+  display:block;
+  height: auto;
+  align-content: center;
+  width: 300px;
+  cursor: pointer;
+  border: 3px solid#bd9e6f;
+  margin-left: 5%;
+  padding-left: 10px;
+  margin-bottom: 5px;
+  border-radius: 25px;
+  height: 100%;
+  color: #F9BD67;
+}
