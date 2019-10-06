@@ -163,8 +163,8 @@ let serializeJson = function(form){
 const generateExpandedView = function(bookmark){
   console.log();
   $('.placeholder').append(`
-      <div class="bookmark-element js-bookmark" >
-        <p class="bookmark-title expand" id="${bookmark.id}">${bookmark.title}</p>
+      <div class="bookmark-element js-bookmark expanded" >
+        <p class="bookmark-title expand " id="${bookmark.id}">${bookmark.title}</p>
         <a href="${bookmark.url}">Visit Site</a>
         <p class="bookmark-rating">Rating | ${bookmark.rating} | </p>
         <p>Description:${bookmark.desc}</p>
@@ -176,8 +176,8 @@ const generateExpandedView = function(bookmark){
 let generateBookmarkCompressedElement = function (bookmark) {
   //console.log(bookmark);
   $('.placeholder').append(`
-    <div class="bookmark-element js-bookmark" id="${bookmark.id}">
-      <p class="expand" id="${bookmark.id}">${bookmark.title} |  ${bookmark.rating}</p>
+    <div class="bookmark-element js-bookmark collapsed" id="${bookmark.id}">
+      <p class="expand" id="${bookmark.id}">${bookmark.title} / Rating: ${bookmark.rating}</p>
       <p class="delete"> <span id="${bookmark.id}"> - Delete - </span></p>
     </div>
     `);
