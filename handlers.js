@@ -107,9 +107,11 @@ const handleDelete = function () {
 const handleSubmitButton = function(){
   $('main').submit('#form',event => {
     event.preventDefault();
+    
     let formElement = $('#form')[0];
     api.createItemOnServer(serializeJson(formElement))
       .then((newItem) => {
+        console.log('putting on the server');
         Store.addBookmark(newItem);
         Store.adding = false;
         renderFormOrHeaders();
