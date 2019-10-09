@@ -35,8 +35,7 @@ const handleNewBookmarkButton = function(){
     //currently this is removing the code because the bookmark list is in main-headers
     Store.adding = true;
     renderFormOrHeaders();
-    handleSubmitButton();
-    handleCancelButton();
+   
   });
 };
 
@@ -58,8 +57,6 @@ const handleExpand = function(){
     event.preventDefault();
     let id = event.currentTarget.id;
   
-    // This is to find the closest bookmark element find closest class, look in jquery
-    //let clickedObject = $('.expand').closest(`#${id}`);
     console.log(`clicked ${event.currentTarget.id}`);
 
     for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
@@ -67,24 +64,11 @@ const handleExpand = function(){
         console.log(Store.LOCALSTORE.bookmarks[i].expanded);
         Store.LOCALSTORE.bookmarks[i].expanded = !Store.LOCALSTORE.bookmarks[i].expanded;
         console.log(Store.LOCALSTORE.bookmarks[i].expanded);
-        //console.log(id + Store.LOCALSTORE.bookmarks[i].expanded);
       } 
     }
-    // $('.placeholder').html('');
     renderBookmarkList();
-    // handleExpand();
   });
 };
-
-// const idOfClickedElement = function(){
-//   $('.primary-container').on('click','.expand', event => {
-//     event.preventDefault();
-//     let id = event.currentTarget.id;
-//     return id;
-//   });
-// };
-
-
 
 
 const handleDelete = function () {
@@ -107,8 +91,8 @@ const handleDelete = function () {
 const handleSubmitButton = function(){
   $('main').submit('#form',event => {
     event.preventDefault();
-    
     let formElement = $('#form')[0];
+    //let formElement = $('#form').serialize();
     api.createItemOnServer(serializeJson(formElement))
       .then((newItem) => {
         console.log('putting on the server');
@@ -130,13 +114,12 @@ const handleSubmitButton = function(){
 const handleFilterChange = function(){
   $('.primary-container').on('change','.filter-options', ( event => {
     event.preventDefault(); 
+    console.log('i felt that');
     Store.LOCALSTORE.filter = $('.filter-options').val();
     renderFormOrHeaders();
     renderBookmarkList();
   }));
 };
-
-
 
 const serializeJson = function(form){
   let formData = new FormData(form);
@@ -144,16 +127,6 @@ const serializeJson = function(form){
   formData.forEach((val,name) => o[name]= val);
   return JSON.stringify(o);
 };
-
-
-// const showExpanded = function(){
-//   for(let i=0; i < Store.LOCALSTORE.bookmarks.length; i++){
-//     if(Store.LOCALSTORE.bookmarks.expanded){
-//       console.log(Store.LOCALSTORE.bookmarks[i]);
-//     }
-//   }
-// };
-
 
 
 
@@ -167,9 +140,9 @@ const generateExpandedView = function(bookmark){
   $('.placeholder').append(`
       <div class="bookmark-element js-bookmark expanded" >
         <p class="bookmark-title expand " id="${bookmark.id}">${bookmark.title}</p>
-        <a href="${bookmark.url}">Visit Site</a>
+        <a href="${bookmark.url}" target="_blank">Visit Site</a>
         <p class="bookmark-rating">Rating | ${bookmark.rating} | </p>
-        <p>Description:${bookmark.desc}</p>
+        <p>Description: ${bookmark.desc}</p>
         <p><span id="${bookmark.id}> - Delete - </span></p>
       </div>
       `);
@@ -183,30 +156,20 @@ const generateBookmarkCompressedElement = function (bookmark) {
       <p class="delete"> <span id="${bookmark.id}"> - Delete - </span></p>
     </div>
     `);
-  
 };
 
 const renderBookmarkList = function(){
   $('.placeholder').html(''); 
   let localBookmarks = Store.LOCALSTORE.bookmarks;
   for (let i = 0; i < localBookmarks.length;  i++){
-
-
     if(localBookmarks[i].rating >= Store.LOCALSTORE.filter) {
       if (localBookmarks[i].expanded){
-
         generateExpandedView(localBookmarks[i]);
       } else {
         generateBookmarkCompressedElement(localBookmarks[i]);
       }
-      
-
     }
-
-
-
   }
-
 };
 
 const renderFormOrHeaders = function() {
@@ -224,7 +187,13 @@ const renderFormOrHeaders = function() {
       </div>
       <div>
         <label>Rating</label>
-        <input type="number" name="rating" min="1" max ="5" required>
+        <select class="rating-selector" name="rating" value="" required>
+        <option value="1"> 1 </option>
+        <option value="2"> 2 </option>
+        <option value="3"> 3 </option>
+        <option value="4"> 4 </option>
+        <option value="5"> 5 </option>
+        </select>
       </div>
       <div>
         <label>Description</label>
@@ -266,6 +235,8 @@ const callListeners = function(){
   handleDelete();
   handleFilterChange();
   handleExpand();
+  handleSubmitButton();
+  handleCancelButton();
 };
 
 
