@@ -4,11 +4,6 @@
 import Store from './Store.js';
 import api from './api.js';
 
-
-
-
-
-
 //------- | Setup Local Store From Server | ----------------------------------
 // I'm unsure where this would land in the Model, View Controller method.
 // This function takes the content of the API at the load of the page and populates our LOCALSTORE  with it's contents.
@@ -25,8 +20,6 @@ const createLocalStore = function(){
     });
 };
 
-//console.log(Store.LOCALSTORE.bookmarks);
-
 //------- | Listener Statements | ----------------------------------
 //Need to review the best practice for the render statement.
 const handleNewBookmarkButton = function(){
@@ -35,7 +28,6 @@ const handleNewBookmarkButton = function(){
     //currently this is removing the code because the bookmark list is in main-headers
     Store.adding = true;
     renderFormOrHeaders();
-   
   });
 };
 
@@ -50,26 +42,18 @@ const handleCancelButton = function(){
   });
 };
 
-
-// Currently not working. 
 const handleExpand = function(){
   $('.primary-container').on('click','.js-bookmark .expand',  event => {
     event.preventDefault();
     let id = event.currentTarget.id;
-  
-    console.log(`clicked ${event.currentTarget.id}`);
-
     for (let i = 0; i < Store.LOCALSTORE.bookmarks.length; i++){
       if(id === Store.LOCALSTORE.bookmarks[i].id){
-        console.log(Store.LOCALSTORE.bookmarks[i].expanded);
         Store.LOCALSTORE.bookmarks[i].expanded = !Store.LOCALSTORE.bookmarks[i].expanded;
-        console.log(Store.LOCALSTORE.bookmarks[i].expanded);
       } 
     }
     renderBookmarkList();
   });
 };
-
 
 const handleDelete = function () {
   $('.primary-container').on('click','span', event => {
@@ -92,10 +76,8 @@ const handleSubmitButton = function(){
   $('main').submit('#form',event => {
     event.preventDefault();
     let formElement = $('#form')[0];
-    //let formElement = $('#form').serialize();
     api.createItemOnServer(serializeJson(formElement))
       .then((newItem) => {
-        console.log('putting on the server');
         Store.addBookmark(newItem);
         Store.adding = false;
         renderFormOrHeaders();
@@ -106,15 +88,22 @@ const handleSubmitButton = function(){
         console.log(error.message);
       });
   });
-
 };
 
+const handleBannerReturn = function(){
+  $('h1').on('click', event => {
+    event.preventDefault();
+    Store.adding = false;
+    $('#form').remove();
+    renderFormOrHeaders();
+    renderBookmarkList();
+  });
+};
 
 //Possible code for filter.!!!!!!----------------
 const handleFilterChange = function(){
   $('.primary-container').on('change','.filter-options', ( event => {
     event.preventDefault(); 
-    console.log('i felt that');
     Store.LOCALSTORE.filter = $('.filter-options').val();
     renderFormOrHeaders();
     renderBookmarkList();
@@ -128,15 +117,9 @@ const serializeJson = function(form){
   return JSON.stringify(o);
 };
 
-
-
-
 //------- | html / content creation and rendering | ----------------------------------
 //Expects a single bookmark element
-
-
 const generateExpandedView = function(bookmark){
-  console.log();
   $('.placeholder').append(`
       <div class="bookmark-element js-bookmark expanded" >
         <p class="bookmark-title expand " id="${bookmark.id}">${bookmark.title}</p>
@@ -149,11 +132,10 @@ const generateExpandedView = function(bookmark){
 };
 
 const generateBookmarkCompressedElement = function (bookmark) {
-  //console.log(bookmark);
   $('.placeholder').append(`
     <div class="bookmark-element js-bookmark collapsed" id="${bookmark.id}">
       <p class="expand" id="${bookmark.id}">${bookmark.title} / Rating: ${bookmark.rating}</p>
-      <p class="delete"> <span id="${bookmark.id}"> - Delete - </span></p>
+      <p class="delete"> <span id="${bookmark.id}">Delete</span></p>
     </div>
     `);
 };
@@ -225,11 +207,7 @@ const renderFormOrHeaders = function() {
   }
 };
 
-
-
-
 //------- | binding the listeners | ----------------------------------
-
 const callListeners = function(){
   handleNewBookmarkButton();
   handleDelete();
@@ -237,9 +215,8 @@ const callListeners = function(){
   handleExpand();
   handleSubmitButton();
   handleCancelButton();
+  handleBannerReturn();
 };
-
-
 
 //------- | Export Default Object | ----------------------------------
 export default{

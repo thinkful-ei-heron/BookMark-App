@@ -1,14 +1,3 @@
-/*
-color palette
-#121114, 
-#BEB4A8, 
-#688C45, 
-#FAAD89, 
-#FCFEFD
-*/
-
-
-
 *{
   font-family: 'Barlow Condensed', sans-serif;
 }
@@ -24,6 +13,8 @@ body{
 
 .placeholder{
   margin-top:30px;
+  display: flex;
+  justify-content: center;
 }
 .hidden{
   display:none;
@@ -34,10 +25,12 @@ h1{
   padding-bottom: 5px;
   color:#F9BD67;
   width: 100%;
+  font-size: 4rem;
 }
 
 .new-bookmark-button{
   background-color: #bd9e6f;
+  display:flex;
   text-align: center;
   align-items: center;
   justify-content: center;
@@ -47,11 +40,15 @@ h1{
   color: #365268;
   border-radius: 25px;
   height: 50px;
-  width: 200px
+  width: 200px;
+  font-size: 1.5rem;
 }
 
 .minimum-rating{
+  font-size: 1.5rem;
   background-color: #bd9e6f;
+  display: flex;
+  justify-content: space-around;
   text-align: center;
   align-items: center;
   padding: 5px;
@@ -60,7 +57,7 @@ h1{
   color: #365268;
   border-radius: 25px;
   height: 50px;
-  width: 200px;
+  width: 20%;
 }
 
 .main-headers{
@@ -76,29 +73,33 @@ h1{
   display:block;
   height: auto;
   align-content: center;
+  text-align: center;
   width: 300px;
   cursor: pointer;
   border: 3px solid#bd9e6f;
-  margin-left: 5%;
-  padding-left: 10px;
   margin-bottom: 5px;
   border-radius: 25px;
   height: 100px;
   color: #F9BD67;
 }
 
-
 .expanded{
   color: #F9BD67;
+
+  width: 30%;
+  height: auto;
+  text-align: center;
   cursor: pointer;
-  height: auto !important;
-  width: 85%;
-  margin-left: 5%;
   margin-bottom: 5px;
-  padding: 5px;
   border: 3px solid #F9BD67;
   border-radius: 25px;
-  height: 100px;
+}
+
+.bookmark-title, expanded{
+  font-size: 2rem;
+}
+.bookmark-title, collapsed{
+  font-size: 1.5rem;
 }
 
 .delete{
@@ -108,17 +109,21 @@ h1{
 
 
 fieldset{
-  display:block;
   height: auto;
   align-content: center;
+  text-align: center;
   width: 300px;
   cursor: pointer;
   border: 3px solid#bd9e6f;
-  margin-left: 5%;
   padding-left: 10px;
   margin-bottom: 5px;
   border-radius: 25px;
   height: 100%;
   color: #F9BD67;
-  background-color: #768477;
+}
+
+.form{
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
 }
