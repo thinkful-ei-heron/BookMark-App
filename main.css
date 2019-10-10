@@ -44,6 +44,12 @@ h1{
   font-size: 1.5rem;
 }
 
+button, .rating-selector{
+  background-color: #bd9e6f;
+  border-radius: 3%;
+  color:#365268;
+}
+
 .minimum-rating{
   font-size: 1.5rem;
   background-color: #bd9e6f;
@@ -85,7 +91,6 @@ h1{
 
 .expanded{
   color: #F9BD67;
-
   width: 30%;
   height: auto;
   text-align: center;
