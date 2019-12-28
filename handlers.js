@@ -5,7 +5,7 @@ import Store from './Store.js';
 import api from './api.js';
 
 //------- | Setup Local Store From Server | ----------------------------------
-// I'm unsure where this would land in the Model, View Controller method.
+
 // This function takes the content of the API at the load of the page and populates our LOCALSTORE  with it's contents.
 const createLocalStore = function(){
   api.getItems()
@@ -21,7 +21,6 @@ const createLocalStore = function(){
 };
 
 //------- | Listener Statements | ----------------------------------
-//Need to review the best practice for the render statement.
 const handleNewBookmarkButton = function(){
   $('.primary-container').on('click','.new-bookmark-button',function(event){
     event.preventDefault();
@@ -33,7 +32,7 @@ const handleNewBookmarkButton = function(){
 
 // change the store and render. That's it. 
 const handleCancelButton = function(){
-  $('.cancel-button').on('click', function(event){
+  $('.primary-container').on('click','.cancel-button', function(event){
     event.preventDefault();
     Store.adding = false;
     $('#form').remove();
@@ -100,7 +99,7 @@ const handleBannerReturn = function(){
   });
 };
 
-//Possible code for filter.!!!!!!----------------
+//Code for filter ----------------
 const handleFilterChange = function(){
   $('.primary-container').on('change','.filter-options', ( event => {
     event.preventDefault(); 

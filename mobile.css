@@ -1,0 +1,21 @@
+@media(max-width: 585px){
+    .main-headers{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .minimum-rating{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 0%;
+    }
+    .new-bookmark-button{
+        margin-bottom: 0%;
+    }
+    .filter-options{
+        font-size: 1rem;
+        color: #bd9e6f;
+    }
+}

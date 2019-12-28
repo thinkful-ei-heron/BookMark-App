@@ -13,7 +13,6 @@ const addBookmark = function (bookmark) {
 
 
 const findAndDeleteBookmark = function(id){
-  // console.log(STORE.bookmarks);
   LOCALSTORE.bookmarks = LOCALSTORE.bookmarks.filter(currentItem => currentItem.id !== id);
 };
 
