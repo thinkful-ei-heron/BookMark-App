@@ -122,7 +122,7 @@ const generateExpandedView = function(bookmark){
   $('.placeholder').append(`
       <div class="bookmark-element js-bookmark expanded" >
         <p class="bookmark-title expand " id="${bookmark.id}">${bookmark.title}</p>
-        <a href="${bookmark.url}" target="_blank">Visit Site</a>
+        <a class='link' href="${bookmark.url}" target="_blank">Visit Site</a>
         <p class="bookmark-rating">Rating | ${bookmark.rating} | </p>
         <p>Description: ${bookmark.desc}</p>
         <p><span id="${bookmark.id}> - Delete - </span></p>

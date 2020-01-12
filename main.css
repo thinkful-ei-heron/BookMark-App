@@ -156,3 +156,11 @@ fieldset{
   padding: .5rem 1rem;
   border-radius: 10px;
 }
+.link{
+  text-decoration: none;
+  color: white;
+}
+.link:visited{
+  text-decoration: none;
+  color: white;
+}
