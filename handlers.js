@@ -180,8 +180,10 @@ const renderFormOrHeaders = function() {
         <label>Description</label>
         <input type="text"  name="desc"  placeholder="Description of bookmark">
       </div>
+    <div class='button-container'>
       <button type="reset" class="cancel-button" id="cancel-button">Cancel</button>
       <button type="submit" class="submit-button" id="submit-button">Submit</button>
+</div>
   </fieldset>
   </form>
     `);
