@@ -190,7 +190,7 @@ const renderFormOrHeaders = function() {
   } else{
     $('.primary-container').html(`
       <section class="main-headers">
-      <h3 class="new-bookmark-button">New Bookmark +</h3>
+      <h3 class="new-bookmark-button">New Bookmark</h3>
       <h3 class ="minimum-rating"> Minimum Rating 
       <form class="js-filter-form">
         <select class="filter-options" value="${Store.LOCALSTORE.filter}">
