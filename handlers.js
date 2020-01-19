@@ -123,7 +123,7 @@ const generateExpandedView = function(bookmark){
       <div class="bookmark-element js-bookmark expanded" >
         <p class="bookmark-title expand " id="${bookmark.id}">${bookmark.title}</p>
         <a class='link' href="${bookmark.url}" target="_blank">Visit Site</a>
-        <p class="bookmark-rating">Rating | ${bookmark.rating} | </p>
+        <p class="bookmark-rating">Rating: ${bookmark.rating}</p>
         <p>Description: ${bookmark.desc}</p>
         <p><span id="${bookmark.id}> - Delete - </span></p>
       </div>
@@ -158,16 +158,16 @@ const renderFormOrHeaders = function() {
     $('.primary-container').html(`
     <form class="form" id="form">
     <fieldset class="fieldset">
-      <div>
-        <label>Title</label>
-        <input type="text" name="title" placeholder="tile of bookmark" required>
+      <div class='formInput'>
+        <label>Title: </label>
+        <input type="text" name="title" placeholder="Portfolio" required>
       </div>
-      <div>
-        <label>URL</label>
-        <input type="url" name="url" placeholder="http://www.abc.com" required>
+      <div class='formInput'>
+        <label>URL: </label>
+        <input type="url" name="url" placeholder="http://www.mysite.com" required>
       </div>
-      <div>
-        <label>Rating</label>
+      <div class='formInput'>
+        <label>Rating: </label>
         <select class="rating-selector" name="rating" value="" required>
         <option value="1"> 1 </option>
         <option value="2"> 2 </option>
@@ -176,9 +176,9 @@ const renderFormOrHeaders = function() {
         <option value="5"> 5 </option>
         </select>
       </div>
-      <div>
-        <label>Description</label>
-        <input type="text"  name="desc"  placeholder="Description of bookmark">
+      <div class='formInput'>
+        <label>Description: </label>
+        <input type="text"  name="desc"  placeholder="Description">
       </div>
     <div class='button-container'>
       <button type="reset" class="cancel-button" id="cancel-button">Cancel</button>
@@ -190,7 +190,7 @@ const renderFormOrHeaders = function() {
   } else{
     $('.primary-container').html(`
       <section class="main-headers">
-      <h3 class="new-bookmark-button"> + New Bookmark </h3>
+      <h3 class="new-bookmark-button">New Bookmark +</h3>
       <h3 class ="minimum-rating"> Minimum Rating 
       <form class="js-filter-form">
         <select class="filter-options" value="${Store.LOCALSTORE.filter}">
